@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title><![CDATA[Hello World]]></title>
-    <url>%2F2019%2F08%2F12%2Fhello-world%2F</url>
-    <content type="text"><![CDATA[Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new "My New Post" More info: Writing Run server1$ hexo server More info: Server Generate static files1$ hexo generate More info: Generating Deploy to remote sites1$ hexo deploy More info: Deployment]]></content>
+    <title><![CDATA[近似最近邻算法SSG学习笔记（一）介绍]]></title>
+    <url>%2F2019%2F08%2F12%2F%E8%BF%91%E4%BC%BC%E6%9C%80%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95SSG%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E4%BB%8B%E7%BB%8D%2F</url>
+    <content type="text"><![CDATA[最近阅读了论文《Satellite System Graph: Towards the Efﬁciency Up-Boundary of Graph-Based Approximate Nearest Neighbor Search(卫星系图：接近基于图的近似最近邻搜索效率的上界)》接下来做简单的介绍： 背景高维空间中的近似最近邻搜索Approximate nearest neighborn searching（ANNS）在数据库、信息检索、数据挖掘和机器学习中是必不少的。 ANNS近似最近邻搜索问题ANNS的主要思想搜索可能是近邻的数据项而不再只局限于返回最可能的项目，在牺牲可接受范围内的精度的情况下提高检索效率。 ANNS的分类 基于树的方法（如图a）随机KD树、R树 基于散列的方法（如图b）局部敏感哈希（LSH）、光谱散列 基于量化的方法产品量化、复合量化 基于图的方法（如图c）NSW、HNSW、FANNG、NSG 其中NSG与SSG都是由同一位作者提出的，两种图的主要思想和构建方法都非常类似，而且SSG的很多改进点都由NSG的缺点引出的。所以，了解NSG有利于SSG的理解。那么下面就来介绍以下NSG等相关知识。 相关研究单调搜索网络MSNET与单调相对领域图MRNG 单调路径Monotonic Path在给定空间的有限点集S中，p、q为在集合中的两点，且G为定义在S上的图。其中 $$v_1,v_2…v_k(v_1=p,v_k=q)$$ ​ 为从点p到q的路径上的点，且∀i = 1,…,k−1,δ(,q) &gt; δ(+1,q)随着i的增大， 与q的距离越来越近。 单调搜索网络Monotonic Search Networks (MSNET)在给定空间的有限点集S中，任意两点p、q之间至少存在一条单调路径。特性：强连通图，确保图的连接性不需要回溯，路径中每一步都更加接近终点q 单调搜索网络MSNET与单调相对领域图MRNG相对邻域图 Relative Neighborhood Graph(RNG)在给定空间的有限点集S中，当且仅当任意两点p、q的之间的区域 中不包含集合S中的任何点。其中，$$lune_{pq}= B(p,δ(p,q)) ∩ B(q,δ(p,q))$$ 单调相对邻域图Monotonic Relative Neighborhood Graph (MRNG)定义：在给定空间的有限点集S中，满足：任意两点p、q的区域中不包含集合S中的任何点。（RNG的定义）或者，若区域中存在的点r，但不属于MRNG定理：在给定空间的有限点集S中，在 S 上定 义的 MRNG 是 MSNET 。 例子： 图a为RNG，图b为MRNG图a中，pq之间的路径存在绕行；图b中，从任何节点到另一节点至少存在一个单调路径。 NSG存在的一些缺陷 MSNET过于稀疏，导致搜索性能较差基于ANN的搜索复杂度主要取决于结点的出度、起点到终点的路径长度(a)(b)(c)分别为MSNET图族的三种不同的图，且(a)-&gt;(c)：稀疏度降低(a)(b)(c)图分别需要7、5、8次计算。结论：并不是图越稀疏、或者越稠密效率越高，而是存在“最优稀疏度 规模较大的实际应用中，nsg索引的复杂度依然很高，限制了它的扩展和搜索性能]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>搜索</tag>
+      </tags>
   </entry>
 </search>

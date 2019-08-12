@@ -55,31 +55,37 @@
   };
 </script>
 
-  <meta name="description" content="I`ll spend forever wondering if you knew">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Gulico">
-<meta property="og:url" content="https://gulico.github.io/index.html">
+  <meta name="description" content="最近阅读了论文《Satellite System Graph: Towards the Efﬁciency Up-Boundary of Graph-Based Approximate Nearest Neighbor Search(卫星系图：接近基于图的近似最近邻搜索效率的上界)》接下来做简单的介绍：">
+<meta name="keywords" content="搜索">
+<meta property="og:type" content="article">
+<meta property="og:title" content="近似最近邻算法SSG学习笔记（一）介绍">
+<meta property="og:url" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/index.html">
 <meta property="og:site_name" content="Gulico">
-<meta property="og:description" content="I`ll spend forever wondering if you knew">
+<meta property="og:description" content="最近阅读了论文《Satellite System Graph: Towards the Efﬁciency Up-Boundary of Graph-Based Approximate Nearest Neighbor Search(卫星系图：接近基于图的近似最近邻搜索效率的上界)》接下来做简单的介绍：">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/%E8%BF%91%E4%BC%BC%E6%9C%80%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95SSG%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E4%BB%8B%E7%BB%8D/ANNS.png">
+<meta property="og:image" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/%E8%BF%91%E4%BC%BC%E6%9C%80%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95SSG%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E4%BB%8B%E7%BB%8D/rng&mrng.png">
+<meta property="og:image" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/%E8%BF%91%E4%BC%BC%E6%9C%80%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95SSG%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E4%BB%8B%E7%BB%8D/msnet_family.png">
+<meta property="og:updated_time" content="2019-08-12T13:20:36.668Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Gulico">
-<meta name="twitter:description" content="I`ll spend forever wondering if you knew">
-  <link rel="canonical" href="https://gulico.github.io/">
+<meta name="twitter:title" content="近似最近邻算法SSG学习笔记（一）介绍">
+<meta name="twitter:description" content="最近阅读了论文《Satellite System Graph: Towards the Efﬁciency Up-Boundary of Graph-Based Approximate Nearest Neighbor Search(卫星系图：接近基于图的近似最近邻搜索效率的上界)》接下来做简单的介绍：">
+<meta name="twitter:image" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/%E8%BF%91%E4%BC%BC%E6%9C%80%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95SSG%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E4%BB%8B%E7%BB%8D/ANNS.png">
+  <link rel="canonical" href="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: true,
-    isPost: false,
+    isHome: false,
+    isPost: true,
     isPage: false,
     isArchive: false
   };
 </script>
 
-  <title>Gulico</title>
+  <title>近似最近邻算法SSG学习笔记（一）介绍 | Gulico</title>
   
 
 
@@ -232,10 +238,11 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          <div id="content" class="content page-home">
+          <div id="content" class="content page-post-detail">
             
-  <section id="posts" class="posts-expand">
-      
+
+  <div id="posts" class="posts-expand">
+    
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
@@ -256,9 +263,8 @@
       <header class="post-header">
 
         
-          <h1 class="post-title" itemprop="name headline">
-              
-              <a href="/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/" class="post-title-link" itemprop="url">近似最近邻算法SSG学习笔记（一）介绍</a>
+          <h1 class="post-title" itemprop="name headline">近似最近邻算法SSG学习笔记（一）介绍
+
             
           </h1>
         
@@ -306,37 +312,77 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>最近阅读了论文《Satellite System Graph: Towards the Efﬁciency Up-Boundary of Graph-Based Approximate Nearest Neighbor Search(卫星系图：接近基于图的近似最近邻搜索效率的上界)》</p><p>接下来做简单的介绍：</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
+        <p>最近阅读了论文《Satellite System Graph: Towards the Efﬁciency Up-Boundary of Graph-Based Approximate Nearest Neighbor Search(卫星系图：接近基于图的近似最近邻搜索效率的上界)》</p><p>接下来做简单的介绍：</p><a id="more"></a>
+
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>高维空间中的近似最近邻搜索Approximate nearest neighborn searching（ANNS）在数据库、信息检索、数据挖掘和机器学习中是必不少的。</p>
+<h2 id="ANNS近似最近邻搜索问题"><a href="#ANNS近似最近邻搜索问题" class="headerlink" title="ANNS近似最近邻搜索问题"></a>ANNS近似最近邻搜索问题</h2><h3 id="ANNS的主要思想"><a href="#ANNS的主要思想" class="headerlink" title="ANNS的主要思想"></a>ANNS的主要思想</h3><p>搜索可能是近邻的数据项而不再只局限于返回最可能的项目，在牺牲可接受范围内的精度的情况下提高检索效率。</p>
+<h3 id="ANNS的分类"><a href="#ANNS的分类" class="headerlink" title="ANNS的分类"></a>ANNS的分类</h3><ul>
+<li><p>基于树的方法（如图a）<br>随机KD树、R树</p>
+</li>
+<li><p>基于散列的方法（如图b）<br>局部敏感哈希（LSH）、光谱散列</p>
+</li>
+<li><p>基于量化的方法<br>产品量化、复合量化</p>
+</li>
+<li><p>基于图的方法（如图c）<br>NSW、HNSW、FANNG、NSG</p>
+<p><img src="%E8%BF%91%E4%BC%BC%E6%9C%80%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95SSG%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E4%BB%8B%E7%BB%8D/ANNS.png" alt="ANNS"></p>
+</li>
+</ul>
+<p>其中NSG与SSG都是由同一位作者提出的，两种图的主要思想和构建方法都非常类似，而且SSG的很多改进点都由NSG的缺点引出的。所以，了解NSG有利于SSG的理解。那么下面就来介绍以下NSG等相关知识。</p>
+<h2 id="相关研究"><a href="#相关研究" class="headerlink" title="相关研究"></a>相关研究</h2><h3 id="单调搜索网络MSNET与单调相对领域图MRNG"><a href="#单调搜索网络MSNET与单调相对领域图MRNG" class="headerlink" title="单调搜索网络MSNET与单调相对领域图MRNG"></a>单调搜索网络MSNET与单调相对领域图MRNG</h3><ul>
+<li><strong>单调路径Monotonic Path</strong><br>在给定空间的有限点集S中，p、q为在集合中的两点，且G为定义在S上的图。其中</li>
+</ul>
+<p>$$<br>v_1,v_2…v_k(v_1=p,v_k=q)<br>$$</p>
+<p>​        为从点p到q的路径上的点，且∀i = 1,…,k−1,δ(,q) &gt; δ(+1,q)随着i的增大， 与q的距离越来越近。</p>
+<ul>
+<li><p><strong>单调搜索网络Monotonic Search Networks (MSNET)</strong><br>在给定空间的有限点集S中，任意两点p、q之间至少存在一条单调路径。<br><strong>特性：</strong><br>强连通图，确保图的连接性<br>不需要回溯，路径中每一步都更加接近终点q</p>
+</li>
+<li><p><strong>单调搜索网络MSNET与单调相对领域图MRNG</strong><br>相对邻域图 Relative Neighborhood Graph(RNG)<br>在给定空间的有限点集S中，当且仅当任意两点p、q的之间的区域 中不包含集合S中的任何点。<br>其中，<br>$$<br>lune_{pq}= B(p,δ(p,q)) ∩ B(q,δ(p,q))<br>$$</p>
+</li>
+<li><p><strong>单调相对邻域图Monotonic Relative Neighborhood Graph (MRNG)</strong><br><strong>定义：</strong>在给定空间的有限点集S中，满足：<br>任意两点p、q的区域中不包含集合S中的任何点。（RNG的定义）<br>或者，若区域中存在的点r，但不属于MRNG<br><strong>定理：</strong><br>在给定空间的有限点集S中，在 S 上定 义的 MRNG 是 MSNET 。</p>
+</li>
+<li><p>例子：</p>
+<p>图a为RNG，图b为MRNG<br>图a中，pq之间的路径存在绕行；图b中，从任何节点到另一节点至少存在一个单调路径。</p>
+<p><img src="%E8%BF%91%E4%BC%BC%E6%9C%80%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95SSG%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E4%BB%8B%E7%BB%8D/rng&mrng.png" alt="RNG和MRNG对比图"></p>
+</li>
+</ul>
+<h3 id="NSG存在的一些缺陷"><a href="#NSG存在的一些缺陷" class="headerlink" title="NSG存在的一些缺陷"></a>NSG存在的一些缺陷</h3><ul>
+<li><p><strong>MSNET过于稀疏，导致搜索性能较差</strong><br>基于ANN的搜索复杂度主要取决于结点的出度、起点到终点的路径长度<br>(a)(b)(c)分别为MSNET图族的三种不同的图，且(a)-&gt;(c)：稀疏度降低<br>(a)(b)(c)图分别需要7、5、8次计算。<br><strong>结论：</strong>并不是图越稀疏、或者越稠密效率越高，而是存在“最优稀疏度</p>
+<p><img src="%E8%BF%91%E4%BC%BC%E6%9C%80%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95SSG%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E4%BB%8B%E7%BB%8D/msnet_family.png" alt="稀疏度对MSNET图族搜索性能的影响"></p>
+</li>
+<li><p><strong>规模较大的实际应用中，nsg索引的复杂度依然很高，限制了它的扩展和搜索性能</strong></p>
+</li>
+</ul>
+
     </div>
 
     
     
     
-      <footer class="post-footer">
-          <div class="post-eof"></div>
         
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/搜索/" rel="tag"># 搜索</a>
+            
+          </div>
+        
+
+        
+
       </footer>
+    
   </div>
   
   
   
   </article>
 
-    
-  </section>
-
-  
+  </div>
 
 
           </div>
@@ -355,8 +401,17 @@
 
   <aside id="sidebar" class="sidebar">
     <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
 
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -443,6 +498,23 @@
 
         </div>
       </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ANNS近似最近邻搜索问题"><span class="nav-number">1.1.</span> <span class="nav-text">ANNS近似最近邻搜索问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ANNS的主要思想"><span class="nav-number">1.1.1.</span> <span class="nav-text">ANNS的主要思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ANNS的分类"><span class="nav-number">1.1.2.</span> <span class="nav-text">ANNS的分类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关研究"><span class="nav-number">1.2.</span> <span class="nav-text">相关研究</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#单调搜索网络MSNET与单调相对领域图MRNG"><span class="nav-number">1.2.1.</span> <span class="nav-text">单调搜索网络MSNET与单调相对领域图MRNG</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSG存在的一些缺陷"><span class="nav-number">1.2.2.</span> <span class="nav-text">NSG存在的一些缺陷</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
 
     </div>
   </aside>
@@ -541,5 +613,9 @@
 
 
   
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
 </body>
 </html>
