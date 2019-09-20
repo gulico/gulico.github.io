@@ -45,7 +45,7 @@ categories: [算法]
 
 3：不断重复这个过程，直到遇到结束符为止。最终输出2个概率最高的序列。
 
-![img](https://img-blog.csdn.net/20181011144011354?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE2MjM0NjEz/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![Beam-Search-Algorithm](集束搜索-Beam-Search-Algorithm/Beam-Search-Algorithm.png)
 
 显然集束搜索属于贪心算法，不能保证一定能够找到全局最优解，因为考虑到搜索空间太大，而采用一个相对的较优解。而维特比算法在字典大小较小时能够快速找到全局最优解。
 
