@@ -1,7 +1,7 @@
 ---
 title: 机器学习之正则化（Regularization）
-date: 2019-10-23 15:51:19
-tags:[机器学习]
+date: 2019-10-23 18:04:00
+tags: [机器学习]
 categories: [机器学习]
 ---
 
