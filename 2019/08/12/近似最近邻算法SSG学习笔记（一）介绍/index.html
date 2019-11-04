@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    save_scroll: false,
+    copycode: {"enable":true,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="最近阅读了论文《Satellite System Graph: Towards the Efﬁciency Up-Boundary of Graph-Based Approximate Nearest Neighbor Search(卫星系图：接近基于图的近似最近邻搜索效率的上界)》接下来做简单的介绍：">
+<meta name="keywords" content="搜索">
+<meta property="og:type" content="article">
+<meta property="og:title" content="近似最近邻算法SSG学习笔记（一）介绍">
+<meta property="og:url" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/index.html">
+<meta property="og:site_name" content="Gulico">
+<meta property="og:description" content="最近阅读了论文《Satellite System Graph: Towards the Efﬁciency Up-Boundary of Graph-Based Approximate Nearest Neighbor Search(卫星系图：接近基于图的近似最近邻搜索效率的上界)》接下来做简单的介绍：">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/ANNS.png">
+<meta property="og:image" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/rng&mrng.png">
+<meta property="og:image" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/msnet_family.png">
+<meta property="og:image" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/ssg.png">
+<meta property="og:image" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/cone.png">
+<meta property="og:image" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/ssg.png">
+<meta property="og:image" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/in_database¬in_database.png">
+<meta property="og:image" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/ANNS_of_SSG.png">
+<meta property="og:image" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/parameter.png">
+<meta property="og:updated_time" content="2019-10-25T01:18:16.042Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="近似最近邻算法SSG学习笔记（一）介绍">
+<meta name="twitter:description" content="最近阅读了论文《Satellite System Graph: Towards the Efﬁciency Up-Boundary of Graph-Based Approximate Nearest Neighbor Search(卫星系图：接近基于图的近似最近邻搜索效率的上界)》接下来做简单的介绍：">
+<meta name="twitter:image" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/ANNS.png">
+  <link rel="canonical" href="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>近似最近邻算法SSG学习笔记（一）介绍 | Gulico</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  <div class="container sidebar-position-left">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Gulico</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+    
+
+</nav>
+  <div class="site-search">
+    
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content page-post-detail">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gulico">
+      <meta itemprop="description" content="I`ll spend forever wondering if you knew">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gulico">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">近似最近邻算法SSG学习笔记（一）介绍
+
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-08-12 20:29:06" itemprop="dateCreated datePublished" datetime="2019-08-12T20:29:06+08:00">2019-08-12</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-10-25 09:18:16" itemprop="dateModified" datetime="2019-10-25T09:18:16+08:00">2019-10-25</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>最近阅读了论文《Satellite System Graph: Towards the Efﬁciency Up-Boundary of Graph-Based Approximate Nearest Neighbor Search(卫星系图：接近基于图的近似最近邻搜索效率的上界)》</p><p>接下来做简单的介绍：</p><a id="more"></a>
+
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>高维空间中的近似最近邻搜索Approximate nearest neighborn searching（ANNS）在数据库、信息检索、数据挖掘和机器学习中是必不少的。</p>
+<h2 id="ANNS近似最近邻搜索问题"><a href="#ANNS近似最近邻搜索问题" class="headerlink" title="ANNS近似最近邻搜索问题"></a>ANNS近似最近邻搜索问题</h2><h3 id="ANNS的主要思想"><a href="#ANNS的主要思想" class="headerlink" title="ANNS的主要思想"></a>ANNS的主要思想</h3><p>搜索可能是近邻的数据项而不再只局限于返回最可能的项目，在牺牲可接受范围内的精度的情况下提高检索效率。</p>
+<h3 id="ANNS的分类"><a href="#ANNS的分类" class="headerlink" title="ANNS的分类"></a>ANNS的分类</h3><ul>
+<li><p>基于树的方法（如图a）<br>随机KD树、R树</p>
+</li>
+<li><p>基于散列的方法（如图b）<br>局部敏感哈希（LSH）、光谱散列</p>
+</li>
+<li><p>基于量化的方法<br>产品量化、复合量化</p>
+</li>
+<li><p>基于图的方法（如图c）<br>NSW、HNSW、FANNG、NSG</p>
+<p><img src="/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/ANNS.png" alt="ANNS"></p>
+</li>
+</ul>
+<p>其中NSG与SSG都是由同一位作者提出的，两种图的主要思想和构建方法都非常类似，而且SSG的很多改进点都由NSG的缺点引出的。所以，了解NSG有利于SSG的理解。那么下面就来介绍以下NSG等相关知识。</p>
+<h2 id="相关研究"><a href="#相关研究" class="headerlink" title="相关研究"></a>相关研究</h2><h3 id="单调搜索网络MSNET与单调相对领域图MRNG"><a href="#单调搜索网络MSNET与单调相对领域图MRNG" class="headerlink" title="单调搜索网络MSNET与单调相对领域图MRNG"></a>单调搜索网络MSNET与单调相对领域图MRNG</h3><ul>
+<li><strong>单调路径Monotonic Path</strong><br>在给定空间的有限点集S中，p、q为在集合中的两点，且G为定义在S上的图。其中</li>
+</ul>
+<p>$$<br>v_1,v_2…v_k(v_1=p,v_k=q)<br>$$</p>
+<p>​        为从点p到q的路径上的点，且∀i = 1,…,k−1,δ(,q) &gt; δ(+1,q)随着i的增大， 与q的距离越来越近。</p>
+<ul>
+<li><p><strong>单调搜索网络Monotonic Search Networks (MSNET)</strong><br>在给定空间的有限点集S中，任意两点p、q之间至少存在一条单调路径。<br><strong>特性：</strong><br>强连通图，确保图的连接性<br>不需要回溯，路径中每一步都更加接近终点q</p>
+</li>
+<li><p><strong>单调搜索网络MSNET与单调相对领域图MRNG</strong><br>相对邻域图 Relative Neighborhood Graph(RNG)<br>在给定空间的有限点集S中，当且仅当任意两点p、q的之间的区域 中不包含集合S中的任何点。<br>其中，<br>$$<br>lune_{pq}= B(p,δ(p,q)) ∩ B(q,δ(p,q))<br>$$</p>
+</li>
+<li><p><strong>单调相对邻域图Monotonic Relative Neighborhood Graph (MRNG)</strong><br><strong>定义：</strong>在给定空间的有限点集S中，满足：<br>任意两点p、q的区域中不包含集合S中的任何点。（RNG的定义）<br>或者，若区域中存在的点r，但不属于MRNG<br><strong>定理：</strong><br>在给定空间的有限点集S中，在 S 上定 义的 MRNG 是 MSNET 。</p>
+</li>
+<li><p>例子：</p>
+<p>图a为RNG，图b为MRNG<br>图a中，pq之间的路径存在绕行；图b中，从任何节点到另一节点至少存在一个单调路径。</p>
+<p><img src="/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/rng&mrng.png" alt="RNG和MRNG对比图"></p>
+</li>
+</ul>
+<h3 id="NSG存在的一些缺陷"><a href="#NSG存在的一些缺陷" class="headerlink" title="NSG存在的一些缺陷"></a>NSG存在的一些缺陷</h3><ul>
+<li><p><strong>MSNET过于稀疏，导致搜索性能较差</strong><br>基于ANN的搜索复杂度主要取决于结点的出度、起点到终点的路径长度<br>(a)(b)(c)分别为MSNET图族的三种不同的图，且(a)-&gt;(c)：稀疏度降低<br>(a)(b)(c)图分别需要7、5、8次计算。<br><strong>结论：</strong>并不是图越稀疏、或者越稠密效率越高，而是存在“最优稀疏度</p>
+<p><strong>解决途径：</strong>图的理论定义-&gt;新的msnet图ssg</p>
+<p>利用参数描述边缘之间的最大角度，控制图的系数性，探索最佳出度。</p>
+<p><img src="/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/msnet_family.png" alt="稀疏度对MSNET图族搜索性能的影响"></p>
+</li>
+<li><p><strong>规模较大的实际应用中，nsg索引的复杂度依然很高，限制了它的扩展和搜索性能</strong></p>
+<p><strong>解决途径：</strong>索引算法的设计，产生近似ssg，具有较低的时间复杂度，有利于应用于大规模的项目。</p>
+</li>
+</ul>
+<h1 id="解决办法-SSG"><a href="#解决办法-SSG" class="headerlink" title="解决办法-SSG"></a>解决办法-SSG</h1><p>为了解决NSG的一些缺陷，作者提出了新的MSNET图SSG(Satellite System Graph卫星系图)。</p>
+<h2 id="SSG的定义"><a href="#SSG的定义" class="headerlink" title="SSG的定义"></a>SSG的定义</h2><p><img src="/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/ssg.png" alt></p>
+<ul>
+<li><p>卫星系图Satellite System Graphs (SSG)<br>定义在有向边集S上，满足，对于任何$\vec{pq} $，  $\vec{pq} $∈ SSG当且仅当Cone($\vec{pq} $,α) ∩B(p,δ(p,q))∩S = ∅ 或者∀r ∈ Cone($\vec{pq} $,α) ∩B(p,δ(p,q))∩S ≠ ∅，但 ∉SSG。(<strong>大白话</strong>： pq ∈ SSG当且仅当以pq为轴，α为角直径的圆锥和以p为圆心，pq为半径的球体和有向边集S的交集为空</p>
+<p>或者该交集中存在点r，但是有向边pr不属于ssg。)</p>
+</li>
+<li><p>δ(p,q)表示pq之间的距离</p>
+</li>
+<li><p>B(p,δ(p,q))表示一p为圆心，pq为半径的开球</p>
+</li>
+<li><p>α ≤ 60◦</p>
+</li>
+<li><p>Cone($\vec{pq} $,α) 表示<br>在欧几里得空间中，对于任意，Cone(,α) 是以为轴，2α为角直径的圆锥。<br>δ：角直径<br>d：物体直径<br>D：物体距离</p>
+<p><img src="/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/cone.png" alt="cone"></p>
+</li>
+</ul>
+<h2 id="构建朴素SSG索引"><a href="#构建朴素SSG索引" class="headerlink" title="构建朴素SSG索引"></a>构建朴素SSG索引</h2><p>对于集合S中每一个 p ∈ S 执行以下过程:</p>
+<ol>
+<li><p>计算集合S中除p点以外的所有点q(q ∈ S−{p})和p的距离pq</p>
+</li>
+<li><p>按照pq的距离，升序对集合q ∈ S−{p}进行排序，形成列表C</p>
+</li>
+<li><p>按顺序检查是否满足SSG的定义，满足则可加入SSG</p>
+<p><img src="/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/ssg.png" alt></p>
+</li>
+</ol>
+<ul>
+<li><strong>例子：</strong><br>在2维空间中，首先计算与p点的距离，并升序排序。按顺序检查有向边是否可以加入SSG。<ul>
+<li>首先看q点，Cone($\vec{pq} $,α) ∩B(p,δ(p,q))∩S = ∅ ，所以有向边pq加入SSG。其他的以此类推。</li>
+<li>再看r点，检查它的顺序肯定在q之后，s之前。 q ∈ Cone($\vec{pq} $α) ∩B(p,δ(p,r))∩S ≠ ∅ ，且SSG，所以不能加入SSG。</li>
+<li>看s点， r ∈ Cone(,α) ∩B(p,δ(p,s))∩S ≠ ∅ ，但，所以可以加入SSG。</li>
+</ul>
+</li>
+</ul>
+<h2 id="SSG的ANNS特性分析"><a href="#SSG的ANNS特性分析" class="headerlink" title="SSG的ANNS特性分析"></a>SSG的ANNS特性分析</h2><h3 id="数据库内查询和非数据库内查询"><a href="#数据库内查询和非数据库内查询" class="headerlink" title="数据库内查询和非数据库内查询"></a>数据库内查询和非数据库内查询</h3><ul>
+<li><p><strong>数据库内查询</strong><br>返回的是数据库中存在的数据</p>
+</li>
+<li><p><strong>非数据库内查询</strong><br>返回的是与查询点邻近的数据</p>
+<p><img src="/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/in_database&not_in_database.png" alt></p>
+</li>
+<li><p>例子<br>如上图，设黑点为起始点，红点为查询点。</p>
+<p>使用贪婪搜索从黑点开始搜索，下一跳应选择黑点的邻居中距离红点最近的点。图a中黑点斜上方的点距离红色查询点更近，而图b中黑点斜下方的点距离红色查询点更近。接着两张图上的查询沿着不同的路径（红色路径）得到了相同的返回结点（红色路径的终点）。</p>
+<p>所以，虽然起始点和最终得到的结果完全相同，但是由于查询点与当前点的距离不同，导致使用贪婪搜索，得到的搜索路径完全不同。</p>
+<h3 id="数据库内查询"><a href="#数据库内查询" class="headerlink" title="数据库内查询"></a>数据库内查询</h3></li>
+<li><p><strong>定理1</strong>：SSG属于MSNET图族</p>
+</li>
+<li><p>与同为MSNET图族的MRNG比较：<br>图(a)为MRNG，图(b)为SSG</p>
+<ul>
+<li>实验显示MRNG的平均出度小于SSG，但平均搜索路径长于SSG。</li>
+<li>由于MRNG中三角形的最长边必须被移除，所以如图a虚线部分是空白的。而且根据MRNG的定义，对于确定的数据集S，MRNG是确定的，不能根据不同情况进行调节。</li>
+<li>SSG通过边之间的夹角进行裁边，使得边缘分布更加均匀，减少空白区域。通过改变边缘之间的最大夹角α可以控制图的稀疏程度，由此可以<strong>根据不同的数据分布调节α</strong>，并找到搜索路径长度和出度的平衡点。    </li>
+</ul>
+<p><img src="/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/ANNS_of_SSG.png" alt></p>
+</li>
+</ul>
+<h3 id="非数据库内查询"><a href="#非数据库内查询" class="headerlink" title="非数据库内查询"></a>非数据库内查询</h3><ul>
+<li><strong>定理3</strong>：对于随机分布在欧几里得空间上的有限集S，任意不属于S的查询q，搜索路径上的每一步都是单调的概率为 0.5 +e ,0 &lt; e ≤ 0.5(单调的概率大于0.5)。其中，当 SSG的α ≤ 30◦时 e=1(一定是单调的)。</li>
+<li>与同为MSNET图族的MRNG比较：<ul>
+<li>从定义来看SSG相对于MRNG的优势与α的大小有关：<ul>
+<li>当α = 60◦时，搜索路径中的任意一步违反单调性的概率小于0.5</li>
+<li>当α ≤ 30◦时，在数据库和非数据库查询的情况下，保证搜索路径一定是单调的。</li>
+<li>同时，对于SSG来说，α=60°比α≤30°稀疏很多。对于在非数据库上的查询来说，出度和单调性之间需要权衡（α大，出度小，单调性的概率下降）。不同分布的数据集，最合适的α不同。</li>
+<li>而MRNG以及它之前的准备工作中（例如生成kNN图），都没有角度约束，所以不具备以上属性。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><ol>
+<li>SSG可以通过α控制图的稀疏度，针对不同数据集，调节α，生成较为合适的图结构。</li>
+<li>在非数据库查询中，比MRNG更具有理论上的普遍性。</li>
+</ol>
+<h2 id="SSG的实用变体NSSG（-Navigating-SSG-）"><a href="#SSG的实用变体NSSG（-Navigating-SSG-）" class="headerlink" title="SSG的实用变体NSSG（ Navigating SSG ）"></a>SSG的实用变体NSSG（ Navigating SSG ）</h2><p>可导航卫星系图NSSG</p>
+<h3 id="生成索引主要步骤"><a href="#生成索引主要步骤" class="headerlink" title="生成索引主要步骤"></a>生成索引主要步骤</h3><ol>
+<li><strong>从少量候选集中选择点的邻居</strong>：首先建立kNN图。候选集从kNN图上对应点的邻居、邻居的邻居中产生。（NSG：使用贪婪搜索，选择起始点p到q之间搜索路径上的所有点加入候选集）</li>
+<li><strong>从候选集中选则边缘的时候使用SSG选边策略</strong><ul>
+<li>且仅仅在此步骤中应用SSG选边策略（参见，建立朴素SSG过程，满足SSG定义即可加入SSG图）</li>
+<li>在最终构成的图上，设置最大度，防止个别点的度特别大。</li>
+</ul>
+</li>
+<li><strong>确保图的连通性</strong>：DFS扩展算法，添加少量的边，确保图单方向的连通性。（与NSG中此部分类似）<ol>
+<li>随机选择m个导航点（NSG仅选择一个中心点作为导航点）-&gt;相比NSG更能适应不同分布的图</li>
+<li>从每一个导航点出发DFS，分别生成深度优先搜索树。当DFS搜索终止时，把没有链接到树的节点，链接到它们最近的邻居。（同NSG）</li>
+</ol>
+</li>
+</ol>
+<p><strong>P.s.虽然SSG的定义要求0°α60°，但是实际操作中可以将α的范围扩展到0°~90°</strong></p>
+<h3 id="搜索"><a href="#搜索" class="headerlink" title="搜索"></a>搜索</h3><ul>
+<li>与其他基于图的搜索一样，使用贪婪搜索进行搜索。</li>
+<li>相比NSG的改动：将m个导航点按照与查询点q的距离从小到大排序，从距离查询点q最近的导航点开始查询。</li>
+</ul>
+<h1 id="实验分析"><a href="#实验分析" class="headerlink" title="实验分析"></a>实验分析</h1><h2 id="搜索性能对比"><a href="#搜索性能对比" class="headerlink" title="搜索性能对比"></a>搜索性能对比</h2><ul>
+<li><p><strong>在规模大的数据集上优势明显</strong><br>SSG对于数据规模不敏感，在高维度上与其他算法差距越来越大</p>
+</li>
+<li><p>DPG(Diversiﬁed Proximity Graph)和SSG都是使用角度进行选边的算法，但是尤其是在数据规模大的情况下，DPG的性能远低于SSG。原因如下：<br>DPG不是MSNET<br>DPG太密集，存在过多无效边</p>
+</li>
+<li><p>由于<strong>NSSG的选边策略为搜索路径带来了跟多有效边</strong>，虽然度变大了，但使得搜索路径中的跳数变少，进而使得NSSG的性能优于NSG和HNSW。</p>
+</li>
+</ul>
+<h2 id="索引生成性能对比"><a href="#索引生成性能对比" class="headerlink" title="索引生成性能对比"></a>索引生成性能对比</h2><ul>
+<li><p><strong>索引尺寸：</strong><br>由于NSSG和NSG的最大度较小，所以索引尺寸是最小的。虽然HNSW的最大度与前者相同，但是由于HNSW是分层的，所以它的索引尺寸会很大。</p>
+</li>
+<li><p><strong>建立索引的时间：</strong><br>NSSG建立索引的时间仅次于KGraph，因为KGraph用于建立NSSG的第一步：生成kNN图。但是NSSG的搜索性能远好于KGraph。</p>
+</li>
+<li><p>最耗时的部分是建立kNN图。可以通过在GPU上生成索引或者使用其他更快的算法代替。</p>
+</li>
+</ul>
+<h2 id="参数对性能的影响"><a href="#参数对性能的影响" class="headerlink" title="参数对性能的影响"></a>参数对性能的影响</h2><ul>
+<li>α=60°时，搜索性能最好</li>
+</ul>
+<p><img src="/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/parameter.png" alt></p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/搜索/" rel="tag"># 搜索</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/08/14/近似最近邻算法SSG学习笔记（二）伪码注释/" rel="prev" title="近似最近邻算法SSG学习笔记（二）伪码注释">
+                  近似最近邻算法SSG学习笔记（二）伪码注释 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.jpg"
+      alt="Gulico">
+  <p class="site-author-name" itemprop="name">Gulico</p>
+  <div class="site-description motion-element" itemprop="description">I`ll spend forever wondering if you knew</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/gulico" title="GitHub &rarr; https://github.com/gulico" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:wxy_official@foxmail.com" title="E-Mail &rarr; mailto:wxy_official@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="http://weibo.com/5915498708/profile" title="Weibo &rarr; http://weibo.com/5915498708/profile" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ANNS近似最近邻搜索问题"><span class="nav-number">1.1.</span> <span class="nav-text">ANNS近似最近邻搜索问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ANNS的主要思想"><span class="nav-number">1.1.1.</span> <span class="nav-text">ANNS的主要思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ANNS的分类"><span class="nav-number">1.1.2.</span> <span class="nav-text">ANNS的分类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关研究"><span class="nav-number">1.2.</span> <span class="nav-text">相关研究</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#单调搜索网络MSNET与单调相对领域图MRNG"><span class="nav-number">1.2.1.</span> <span class="nav-text">单调搜索网络MSNET与单调相对领域图MRNG</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSG存在的一些缺陷"><span class="nav-number">1.2.2.</span> <span class="nav-text">NSG存在的一些缺陷</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决办法-SSG"><span class="nav-number">2.</span> <span class="nav-text">解决办法-SSG</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SSG的定义"><span class="nav-number">2.1.</span> <span class="nav-text">SSG的定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构建朴素SSG索引"><span class="nav-number">2.2.</span> <span class="nav-text">构建朴素SSG索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSG的ANNS特性分析"><span class="nav-number">2.3.</span> <span class="nav-text">SSG的ANNS特性分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库内查询和非数据库内查询"><span class="nav-number">2.3.1.</span> <span class="nav-text">数据库内查询和非数据库内查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库内查询"><span class="nav-number">2.3.2.</span> <span class="nav-text">数据库内查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非数据库内查询"><span class="nav-number">2.3.3.</span> <span class="nav-text">非数据库内查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结："><span class="nav-number">2.3.4.</span> <span class="nav-text">总结：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSG的实用变体NSSG（-Navigating-SSG-）"><span class="nav-number">2.4.</span> <span class="nav-text">SSG的实用变体NSSG（ Navigating SSG ）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#生成索引主要步骤"><span class="nav-number">2.4.1.</span> <span class="nav-text">生成索引主要步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搜索"><span class="nav-number">2.4.2.</span> <span class="nav-text">搜索</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实验分析"><span class="nav-number">3.</span> <span class="nav-text">实验分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#搜索性能对比"><span class="nav-number">3.1.</span> <span class="nav-text">搜索性能对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引生成性能对比"><span class="nav-number">3.2.</span> <span class="nav-text">索引生成性能对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参数对性能的影响"><span class="nav-number">3.3.</span> <span class="nav-text">参数对性能的影响</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gulico</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.3.0</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+
+    
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.3.0"></script>
+  <script src="/js/motion.js?v=7.3.0"></script>
+
+
+  <script src="/js/schemes/muse.js?v=7.3.0"></script>
+
+
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', function() {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+  
+
+  
+
+  
+
+
+  
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
+</body>
+</html>

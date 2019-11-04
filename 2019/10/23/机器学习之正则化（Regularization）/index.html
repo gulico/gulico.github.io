@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    save_scroll: false,
+    copycode: {"enable":true,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="1. The Problem of Overfitting1还是来看预测房价的这个例子，我们先对该数据做线性回归，也就是左边第一张图。如果这么做，我们可以获得拟合数据的这样一条直线，但是，实际上这并不是一个很好的模型。我们看看这些数据，很明显，随着房子面积增大，住房价格的变化趋于稳定或者说越往右越平缓。因此线性回归并没有很好拟合训练数据。">
+<meta name="keywords" content="机器学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习之正则化（Regularization）">
+<meta property="og:url" content="https://gulico.github.io/2019/10/23/机器学习之正则化（Regularization）/index.html">
+<meta property="og:site_name" content="Gulico">
+<meta property="og:description" content="1. The Problem of Overfitting1还是来看预测房价的这个例子，我们先对该数据做线性回归，也就是左边第一张图。如果这么做，我们可以获得拟合数据的这样一条直线，但是，实际上这并不是一个很好的模型。我们看看这些数据，很明显，随着房子面积增大，住房价格的变化趋于稳定或者说越往右越平缓。因此线性回归并没有很好拟合训练数据。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://gulico.github.io/2019/10/23/机器学习之正则化（Regularization）/Linear_regression_Example.png">
+<meta property="og:image" content="https://gulico.github.io/2019/10/23/机器学习之正则化（Regularization）/Logistic_regression_Example.png">
+<meta property="og:image" content="https://gulico.github.io/2019/10/23/机器学习之正则化（Regularization）/Options.png">
+<meta property="og:image" content="https://gulico.github.io/2019/10/23/机器学习之正则化（Regularization）/Cost_Function.png">
+<meta property="og:image" content="https://gulico.github.io/2019/10/23/机器学习之正则化（Regularization）/penalize.png">
+<meta property="og:image" content="https://gulico.github.io/2019/10/23/机器学习之正则化（Regularization）/penalize2.png">
+<meta property="og:image" content="https://gulico.github.io/2019/10/23/机器学习之正则化（Regularization）/Intuition.png">
+<meta property="og:image" content="https://gulico.github.io/2019/10/23/机器学习之正则化（Regularization）/Regularization.png">
+<meta property="og:image" content="https://gulico.github.io/2019/10/23/机器学习之正则化（Regularization）/Regularization2.png">
+<meta property="og:image" content="https://gulico.github.io/2019/10/23/机器学习之正则化（Regularization）/Regularization3.png">
+<meta property="og:image" content="https://gulico.github.io/2019/10/23/机器学习之正则化（Regularization）/Regularization4.png">
+<meta property="og:image" content="https://gulico.github.io/2019/10/23/机器学习之正则化（Regularization）/Regularization5.png">
+<meta property="og:updated_time" content="2019-10-25T01:18:16.032Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习之正则化（Regularization）">
+<meta name="twitter:description" content="1. The Problem of Overfitting1还是来看预测房价的这个例子，我们先对该数据做线性回归，也就是左边第一张图。如果这么做，我们可以获得拟合数据的这样一条直线，但是，实际上这并不是一个很好的模型。我们看看这些数据，很明显，随着房子面积增大，住房价格的变化趋于稳定或者说越往右越平缓。因此线性回归并没有很好拟合训练数据。">
+<meta name="twitter:image" content="https://gulico.github.io/2019/10/23/机器学习之正则化（Regularization）/Linear_regression_Example.png">
+  <link rel="canonical" href="https://gulico.github.io/2019/10/23/机器学习之正则化（Regularization）/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>机器学习之正则化（Regularization） | Gulico</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  <div class="container sidebar-position-left">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Gulico</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+    
+
+</nav>
+  <div class="site-search">
+    
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content page-post-detail">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://gulico.github.io/2019/10/23/机器学习之正则化（Regularization）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gulico">
+      <meta itemprop="description" content="I`ll spend forever wondering if you knew">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gulico">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">机器学习之正则化（Regularization）
+
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-23 18:04:00" itemprop="dateCreated datePublished" datetime="2019-10-23T18:04:00+08:00">2019-10-23</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-10-25 09:18:16" itemprop="dateModified" datetime="2019-10-25T09:18:16+08:00">2019-10-25</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/机器学习/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="1-The-Problem-of-Overfitting"><a href="#1-The-Problem-of-Overfitting" class="headerlink" title="1. The Problem of Overfitting"></a>1. The Problem of Overfitting</h2><p><img src="/2019/10/23/机器学习之正则化（Regularization）/Linear_regression_Example.png" alt="Linear_regression_Example"></p><h3 id="1"><a href="#1" class="headerlink" title="1"></a>1</h3><p>还是来看预测房价的这个例子，我们先对该数据做线性回归，也就是左边第一张图。</p><p>如果这么做，我们可以获得拟合数据的这样一条直线，但是，实际上这并不是一个很好的模型。我们看看这些数据，很明显，随着房子面积增大，住房价格的变化趋于稳定或者说越往右越平缓。因此线性回归并没有很好拟合训练数据。</p><a id="more"></a>
+
+
+<blockquote>
+<p><strong>我们把此类情况称为欠拟合(underfitting)，或者叫作叫做高偏差(bias)。</strong></p>
+</blockquote>
+<p>这两种说法大致相似，都表示没有很好地拟合训练数据。高偏差这个词是 machine learning 的研究初期传下来的一个专业名词，具体到这个问题，意思就是说如果用线性回归这个算法去拟合训练数据，那么该算法实际上会产生一个非常大的偏差或者说存在一个很强的偏见。</p>
+<p>第二幅图，我们在中间加入一个二次项，也就是说对于这幅数据我们用二次函数去拟合。自然，可以拟合出一条曲线，事实也证明这个拟合效果很好。</p>
+<p>另一个极端情况是，如果在第三幅图中对于该数据集用一个四次多项式来拟合。因此在这里我们有五个参数θ0到θ4，这样我们同样可以拟合一条曲线，通过我们的五个训练样本，我们可以得到如右图的一条曲线。</p>
+<p>一方面，我们似乎对训练数据做了一个很好的拟合，因为这条曲线通过了所有的训练实例。但是，这实际上是一条很扭曲的曲线，它不停上下波动。因此，事实上我们并不认为它是一个预测房价的好模型。</p>
+<blockquote>
+<p><strong>所以，我们把这类情况叫做过拟合(overfitting)，也叫高方差(variance)。</strong></p>
+</blockquote>
+<p>与高偏差一样，高方差同样也是一个历史上的叫法。从第一印象上来说，如果我们拟合一个高阶多项式，那么这个函数能很好的拟合训练集（能拟合几乎所有的训练数据），但这也就面临函数可能太过庞大的问题，变量太多。</p>
+<p><strong>同时如果我们没有足够的数据集（训练集）去约束这个变量过多的模型，那么就会发生过拟合。</strong></p>
+<h3 id="2"><a href="#2" class="headerlink" title="2"></a>2</h3><p>过度拟合的问题通常发生在变量（特征）过多的时候。这种情况下训练出的方程总是能很好的拟合训练数据，也就是说，我们的代价函数可能非常接近于 0 或者就为 0。</p>
+<p>但是，这样的曲线千方百计的去拟合训练数据，这样会导致它无法泛化到新的数据样本中，以至于无法预测新样本价格。在这里，<strong>术语”泛化”指的是一个假设模型能够应用到新样本的能力。</strong>新样本数据是指没有出现在训练集中的数据。</p>
+<p><img src="/2019/10/23/机器学习之正则化（Regularization）/Logistic_regression_Example.png" alt="Logistic_regression_Example"></p>
+<p>之前，我们看到了线性回归情况下的过拟合。类似的情况也适用于逻辑回归。</p>
+<h3 id="3"><a href="#3" class="headerlink" title="3"></a>3</h3><p>那么，如果发生了过拟合问题，我们应该如何处理？</p>
+<p>过多的变量（特征），同时只有非常少的训练数据，会导致出现过度拟合的问题。因此为了解决过度拟合，有以下两个办法。</p>
+<p><img src="/2019/10/23/机器学习之正则化（Regularization）/Options.png" alt="Options"></p>
+<blockquote>
+<p><strong>方法一：尽量减少选取变量的数量</strong></p>
+</blockquote>
+<p>具体而言，我们可以人工检查每一项变量，并以此来确定哪些变量更为重要，然后，保留那些更为重要的特征变量。至于，哪些变量应该舍弃，我们以后在讨论，这会涉及到模型选择算法，这种算法是可以自动选择采用哪些特征变量，自动舍弃不需要的变量。这类做法非常有效，但是其缺点是当你舍弃一部分特征变量时，你也舍弃了问题中的一些信息。例如，也许所有的特征变量对于预测房价都是有用的，我们实际上并不想舍弃一些信息或者说舍弃这些特征变量。</p>
+<blockquote>
+<p><strong>方法二：正则化</strong></p>
+</blockquote>
+<p>正则化中我们将保留所有的特征变量，但是会减小特征变量的数量级（参数数值的大小θ(j)）。</p>
+<p>这个方法非常有效，当我们有很多特征变量时，其中每一个变量都能对预测产生一点影响。正如我们在房价预测的例子中看到的那样，我们可以有很多特征变量，其中每一个变量都是有用的，因此我们不希望把它们删掉，这就导致了正则化概念的发生。</p>
+<p>接下来我们会讨论怎样应用正则化和什么叫做正则化均值，然后将开始讨论怎样使用正则化来使学习算法正常工作，并避免过拟合。</p>
+<h2 id="2-Cost-Function"><a href="#2-Cost-Function" class="headerlink" title="2. Cost Function"></a>2. Cost Function</h2><p><img src="/2019/10/23/机器学习之正则化（Regularization）/Cost_Function.png" alt="Cost_Function"></p>
+<h3 id="1-1"><a href="#1-1" class="headerlink" title="1"></a>1</h3><p>在前面的介绍中，我们看到了如果用一个二次函数来拟合这些数据，那么它给了我们一个对数据很好的拟合。然而，如果我们用一个更高次的多项式去拟合，最终我们可能会得到一个曲线，它能很好地拟合训练集，但却并不是一个好的结果，因为它过度拟合了数据，因此，一般性并不是很好。</p>
+<p>让我们考虑下面的假设，我们想要加上<strong>惩罚项</strong>，从而使参数 θ3 和 θ4 足够的小。</p>
+<p><img src="/2019/10/23/机器学习之正则化（Regularization）/penalize.png" alt="penalize"></p>
+<p>这里我的意思就是，上图的式子是我们的优化目标，也就是说我们需要尽量减少代价函数的均方误差。</p>
+<p>对于这个函数我们对它添加一些项，加上 1000 乘以 θ3 的平方，再加上 1000 乘以 θ4 的平方，</p>
+<p><img src="/2019/10/23/机器学习之正则化（Regularization）/penalize2.png" alt="penalize2"></p>
+<p>1000 只是我随便写的某个较大的数字而已。现在，如果我们要最小化这个函数，那么为了最小化这个新的代价函数，我们要让 θ3 和 θ4 尽可能小。因为，如果你在原有代价函数的基础上加上 1000 乘以 θ3 这一项 ，那么这个新的代价函数将变得很大，所以，当我们最小化这个新的代价函数时， 我们将使 θ3 的值接近于 0，同样 θ4 的值也接近于 0，就像我们忽略了这两个值一样。如果我们做到这一点（ θ3 和 θ4 接近 0 ），那么我们将得到一个近似的二次函数。</p>
+<p><img src="/2019/10/23/机器学习之正则化（Regularization）/Intuition.png" alt="Intuition"></p>
+<p>因此，我们最终恰当地拟合了数据，我们所使用的正是二次函数加上一些非常小，贡献很小项（因为这些项的 θ3、 θ4 非常接近于0）。显然，这是一个更好的假设。</p>
+<h3 id="2-1"><a href="#2-1" class="headerlink" title="2"></a>2</h3><p><img src="/2019/10/23/机器学习之正则化（Regularization）/Regularization.png" alt="Regularization"></p>
+<p>更一般地，这里给出了正规化背后的思路。这种思路就是，如果我们的参数值对应一个较小值的话（参数值比较小），那么往往我们会得到一个形式更简单的假设。</p>
+<p>在我们上面的例子中，我们惩罚的只是 θ3 和 θ4 ，使这两个值均接近于零，从而我们得到了一个更简单的假设，实际上这个假设大抵上是一个二次函数。</p>
+<p>但更一般地说，如果我们像惩罚 θ3 和 θ4 这样惩罚其它参数，那么我们往往可以得到一个相对较为简单的假设。</p>
+<blockquote>
+<p><strong>实际上，这些参数的值越小，通常对应于越光滑的函数，也就是更加简单的函数。因此 就不易发生过拟合的问题。</strong></p>
+</blockquote>
+<p>我知道，为什么越小的参数对应于一个相对较为简单的假设，对你来说现在不一定完全理解，但是在上面的例子中使 θ3 和 θ4 很小，并且这样做能给我们一个更加简单的假设，这个例子至少给了我们一些直观感受。</p>
+<p>来让我们看看具体的例子，对于房屋价格预测我们可能有上百种特征，与刚刚所讲的多项式例子不同，我们并不知道 θ3 和 θ4 是高阶多项式的项。所以，如果我们有一百个特征，我们并不知道如何选择关联度更好的参数，如何缩小参数的数目等等。</p>
+<p>因此在正则化里，我们要做的事情，就是把减小我们的代价函数（例子中是线性回归的代价函数）所有的参数值，因为我们并不知道是哪一个或哪几个要去缩小。</p>
+<p>因此，我们需要修改代价函数，在这后面添加一项，就像我们在方括号里的这项。当我们添加一个额外的正则化项的时候，我们收缩了每个参数。</p>
+<p><img src="/2019/10/23/机器学习之正则化（Regularization）/Regularization2.png" alt="Regularization2"></p>
+<p>顺便说一下，按照惯例，我们没有去惩罚 θ0，因此 θ0 的值是大的。这就是一个约定从 1 到 n 的求和，而不是从 0 到 n 的求和。但其实在实践中<br>这只会有非常小的差异，无论你是否包括这 θ0 这项。但是按照惯例，通常情况下我们还是只从 θ1 到 θn 进行正则化。</p>
+<p>下面的这项就是一个正则化项</p>
+<p><img src="/2019/10/23/机器学习之正则化（Regularization）/Regularization3.png" alt="Regularization3"><br>并且 λ 在这里我们称做正则化参数。</p>
+<blockquote>
+<p><strong>λ 要做的就是控制在两个不同的目标中的平衡关系。</strong></p>
+</blockquote>
+<p><strong>第一个目标就是我们想要训练，使假设更好地拟合训练数据。</strong>我们希望假设能够很好的适应训练集。</p>
+<p><strong>而第二个目标是我们想要保持参数值较小。（通过正则化项）</strong></p>
+<p>而 λ 这个正则化参数需要控制的是这两者之间的平衡，即平衡拟合训练的目标和保持参数值较小的目标。从而来保持假设的形式相对简单，来避免过度的拟合。</p>
+<p>对于我们的房屋价格预测来说，我们之前所用的非常高的高阶多项式来拟合，我们将会得到一个非常弯曲和复杂的曲线函数，现在我们只需要使用正则化目标的方法，那么你就可以得到一个更加合适的曲线，但这个曲线不是一个真正的二次函数，而是更加的流畅和简单的一个曲线。这样就得到了对于这个数据更好的假设。</p>
+<p>再一次说明下，这部分内容的确有些难以明白，为什么加上参数的影响可以具有这种效果？但如果你亲自实现了正规化，你将能够看到这种影响的最直观的感受。</p>
+<h3 id="3-1"><a href="#3-1" class="headerlink" title="3"></a>3</h3><p><img src="/2019/10/23/机器学习之正则化（Regularization）/Regularization4.png" alt="Regularization4"></p>
+<p>在正则化线性回归中，如果正则化参数值 λ 被设定为非常大，那么将会发生什么呢？</p>
+<p>我们将会非常大地惩罚参数θ1 θ2 θ3 θ4 … 也就是说，我们最终惩罚θ1 θ2 θ3 θ4 …  在一个非常大的程度，那么我们会使所有这些参数接近于零。</p>
+<p><img src="/2019/10/23/机器学习之正则化（Regularization）/Regularization5.png" alt="Regularization5"></p>
+<p>如果我们这么做，那么就是我们的假设中相当于去掉了这些项，并且使我们只是留下了一个简单的假设，这个假设只能表明房屋价格等于 θ0 的值，那就是类似于拟合了一条水平直线，对于数据来说这就是一个欠拟合 (underfitting)。这种情况下这一假设它是条失败的直线，对于训练集来说这只是一条平滑直线，它没有任何趋势，它不会去趋向大部分训练样本的任何值。</p>
+<p>这句话的另一种方式来表达就是这种假设有过于强烈的”偏见” 或者过高的偏差 (bais)，认为预测的价格只是等于 θ0 。对于数据来说这只是一条水平线。</p>
+<p>因此，为了使正则化运作良好，我们应当注意一些方面，应该去选择一个不错的正则化参数 λ 。当我们以后讲到多重选择时我们将讨论一种方法来自动选择正则化参数 λ  ，为了使用正则化，接下来我们将把这些概念应用到到线性回归和逻辑回归中去，那么我们就可以让他们避免过度拟合了。</p>
+<h2 id="转载自"><a href="#转载自" class="headerlink" title="转载自"></a>转载自</h2><p><a href="https://www.cnblogs.com/nowornever-L/p/6862320.html" target="_blank" rel="noopener">https://www.cnblogs.com/nowornever-L/p/6862320.html</a></p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/09/12/集束搜索-Beam-Search-Algorithm/" rel="next" title="集束搜索(Beam Search Algorithm)">
+                  <i class="fa fa-chevron-left"></i> 集束搜索(Beam Search Algorithm)
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/10/25/Machine-Learning-学习笔记之error的来源/" rel="prev" title="Machine Learning 学习笔记之error的来源">
+                  Machine Learning 学习笔记之error的来源 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.jpg"
+      alt="Gulico">
+  <p class="site-author-name" itemprop="name">Gulico</p>
+  <div class="site-description motion-element" itemprop="description">I`ll spend forever wondering if you knew</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/gulico" title="GitHub &rarr; https://github.com/gulico" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:wxy_official@foxmail.com" title="E-Mail &rarr; mailto:wxy_official@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="http://weibo.com/5915498708/profile" title="Weibo &rarr; http://weibo.com/5915498708/profile" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-The-Problem-of-Overfitting"><span class="nav-number">1.</span> <span class="nav-text">1. The Problem of Overfitting</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1"><span class="nav-number">1.1.</span> <span class="nav-text">1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2"><span class="nav-number">1.2.</span> <span class="nav-text">2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3"><span class="nav-number">1.3.</span> <span class="nav-text">3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Cost-Function"><span class="nav-number">2.</span> <span class="nav-text">2. Cost Function</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1"><span class="nav-number">2.1.</span> <span class="nav-text">1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1"><span class="nav-number">2.2.</span> <span class="nav-text">2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1"><span class="nav-number">2.3.</span> <span class="nav-text">3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#转载自"><span class="nav-number">3.</span> <span class="nav-text">转载自</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gulico</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.3.0</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+
+    
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.3.0"></script>
+  <script src="/js/motion.js?v=7.3.0"></script>
+
+
+  <script src="/js/schemes/muse.js?v=7.3.0"></script>
+
+
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
+</body>
+</html>
