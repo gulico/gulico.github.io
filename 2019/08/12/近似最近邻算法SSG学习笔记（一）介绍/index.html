@@ -69,7 +69,7 @@
 <meta property="og:image" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/ssg.png">
 <meta property="og:image" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/cone.png">
 <meta property="og:image" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/ssg.png">
-<meta property="og:image" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/in_database¬in_database.png">
+<meta property="og:image" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/in_database&not_in_database.png">
 <meta property="og:image" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/ANNS_of_SSG.png">
 <meta property="og:image" content="https://gulico.github.io/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/parameter.png">
 <meta property="og:updated_time" content="2019-10-25T01:18:16.042Z">
@@ -345,18 +345,19 @@
 <h2 id="相关研究"><a href="#相关研究" class="headerlink" title="相关研究"></a>相关研究</h2><h3 id="单调搜索网络MSNET与单调相对领域图MRNG"><a href="#单调搜索网络MSNET与单调相对领域图MRNG" class="headerlink" title="单调搜索网络MSNET与单调相对领域图MRNG"></a>单调搜索网络MSNET与单调相对领域图MRNG</h3><ul>
 <li><strong>单调路径Monotonic Path</strong><br>在给定空间的有限点集S中，p、q为在集合中的两点，且G为定义在S上的图。其中</li>
 </ul>
-<p>$$<br>v_1,v_2…v_k(v_1=p,v_k=q)<br>$$</p>
-<p>​        为从点p到q的路径上的点，且∀i = 1,…,k−1,δ(,q) &gt; δ(+1,q)随着i的增大， 与q的距离越来越近。</p>
+<script type="math/tex; mode=display">
+v_1,v_2...v_k(v_1=p,v_k=q)</script><p>​        为从点p到q的路径上的点，且∀i = 1,…,k−1,δ(,q) &gt; δ(+1,q)随着i的增大， 与q的距离越来越近。</p>
 <ul>
 <li><p><strong>单调搜索网络Monotonic Search Networks (MSNET)</strong><br>在给定空间的有限点集S中，任意两点p、q之间至少存在一条单调路径。<br><strong>特性：</strong><br>强连通图，确保图的连接性<br>不需要回溯，路径中每一步都更加接近终点q</p>
 </li>
-<li><p><strong>单调搜索网络MSNET与单调相对领域图MRNG</strong><br>相对邻域图 Relative Neighborhood Graph(RNG)<br>在给定空间的有限点集S中，当且仅当任意两点p、q的之间的区域 中不包含集合S中的任何点。<br>其中，<br>$$<br>lune_{pq}= B(p,δ(p,q)) ∩ B(q,δ(p,q))<br>$$</p>
-</li>
+<li><p><strong>单调搜索网络MSNET与单调相对领域图MRNG</strong><br>相对邻域图 Relative Neighborhood Graph(RNG)<br>在给定空间的有限点集S中，当且仅当任意两点p、q的之间的区域 中不包含集合S中的任何点。<br>其中，</p>
+<script type="math/tex; mode=display">
+lune_{pq}= B(p,δ(p,q)) ∩ B(q,δ(p,q))</script></li>
 <li><p><strong>单调相对邻域图Monotonic Relative Neighborhood Graph (MRNG)</strong><br><strong>定义：</strong>在给定空间的有限点集S中，满足：<br>任意两点p、q的区域中不包含集合S中的任何点。（RNG的定义）<br>或者，若区域中存在的点r，但不属于MRNG<br><strong>定理：</strong><br>在给定空间的有限点集S中，在 S 上定 义的 MRNG 是 MSNET 。</p>
 </li>
 <li><p>例子：</p>
 <p>图a为RNG，图b为MRNG<br>图a中，pq之间的路径存在绕行；图b中，从任何节点到另一节点至少存在一个单调路径。</p>
-<p><img src="/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/rng&mrng.png" alt="RNG和MRNG对比图"></p>
+<p><img src="/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/rng&amp;mrng.png" alt="RNG和MRNG对比图"></p>
 </li>
 </ul>
 <h3 id="NSG存在的一些缺陷"><a href="#NSG存在的一些缺陷" class="headerlink" title="NSG存在的一些缺陷"></a>NSG存在的一些缺陷</h3><ul>
@@ -407,7 +408,7 @@
 <li><p><strong>数据库内查询</strong><br>返回的是数据库中存在的数据</p>
 </li>
 <li><p><strong>非数据库内查询</strong><br>返回的是与查询点邻近的数据</p>
-<p><img src="/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/in_database&not_in_database.png" alt></p>
+<p><img src="/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/in_database&amp;not_in_database.png" alt></p>
 </li>
 <li><p>例子<br>如上图，设黑点为起始点，红点为查询点。</p>
 <p>使用贪婪搜索从黑点开始搜索，下一跳应选择黑点的邻居中距离红点最近的点。图a中黑点斜上方的点距离红色查询点更近，而图b中黑点斜下方的点距离红色查询点更近。接着两张图上的查询沿着不同的路径（红色路径）得到了相同的返回结点（红色路径的终点）。</p>
