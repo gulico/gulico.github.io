@@ -191,6 +191,17 @@
     <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-guestbook">
+      
+    
+
+    <a href="/guestbook" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>留言</a>
+
+  </li>
       <li class="menu-item menu-item-search">
         <a href="javascript:;" class="popup-trigger">
         
@@ -202,6 +213,9 @@
     
 
     
+    
+      
+      
     
       
       
@@ -288,9 +302,9 @@
 
       <h2 class="post-title">
         
-          <a class="post-title-link" href="/2019/11/11/人工神经网络的无监督学习/" itemprop="url">
+          <a class="post-title-link" href="/2019/11/11/脉冲神经网络的无监督学习规则/" itemprop="url">
             
-              <span itemprop="name">人工神经网络的无监督学习</span>
+              <span itemprop="name">脉冲神经网络的无监督学习规则</span>
             
           </a>
         
@@ -592,9 +606,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -740,5 +752,31 @@
 
 
   
+    
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', function() {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'tUixx2MIs06BcUS55LA7XdJX-gzGzoHsz',
+    appKey: 'RrIrslLlxOBS5B44YcCIC0Oh',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname
+  });
+}, window.Valine);
+</script>
+
 </body>
 </html>
