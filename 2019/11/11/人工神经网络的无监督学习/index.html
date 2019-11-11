@@ -55,24 +55,25 @@
   };
 </script>
 
-  <meta name="description" content="人工神经网络的无监督学习输入的是无标签数据，没有用来指导突触权值修改过程的实际输出和期望输出之间的误差或者奖励信号。神经网络通过一些学习算法自动调整网格参数，一般分为两种算法： 全局学习算法，参照全局视图来修改突触； 局部学习算法，每一个神经元自己通过算法根据输入输出来修改权值。 脉冲神经网络的无监督学习是一种具有生物可解释性的学习规则，在机器学习中占用重要的地位。">
+  <meta name="description" content="输入的是无标签数据，没有用来指导突触权值修改过程的实际输出和期望输出之间的误差或者奖励信号。神经网络通过一些学习算法自动调整网格参数，一般分为两种算法： 全局学习算法，参照全局视图来修改突触； 局部学习算法，每一个神经元自己通过算法根据输入输出来修改权值。 脉冲神经网络的无监督学习是一种具有生物可解释性的学习规则，在机器学习中占用重要的地位。">
+<meta name="keywords" content="-[脉冲神经网络] -[机器学习]">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Gulico">
-<meta property="og:url" content="https://gulico.github.io/2019/11/06/脉冲神经网络（Spiking-Neural-Network，SNN）概述/脉冲神经网络的无监督学习规则/index.html">
+<meta property="og:title" content="人工神经网络的无监督学习">
+<meta property="og:url" content="https://gulico.github.io/2019/11/11/人工神经网络的无监督学习/index.html">
 <meta property="og:site_name" content="Gulico">
-<meta property="og:description" content="人工神经网络的无监督学习输入的是无标签数据，没有用来指导突触权值修改过程的实际输出和期望输出之间的误差或者奖励信号。神经网络通过一些学习算法自动调整网格参数，一般分为两种算法： 全局学习算法，参照全局视图来修改突触； 局部学习算法，每一个神经元自己通过算法根据输入输出来修改权值。 脉冲神经网络的无监督学习是一种具有生物可解释性的学习规则，在机器学习中占用重要的地位。">
+<meta property="og:description" content="输入的是无标签数据，没有用来指导突触权值修改过程的实际输出和期望输出之间的误差或者奖励信号。神经网络通过一些学习算法自动调整网格参数，一般分为两种算法： 全局学习算法，参照全局视图来修改突触； 局部学习算法，每一个神经元自己通过算法根据输入输出来修改权值。 脉冲神经网络的无监督学习是一种具有生物可解释性的学习规则，在机器学习中占用重要的地位。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://gulico.github.io/2019/11/06/脉冲神经网络（Spiking-Neural-Network，SNN）概述/脉冲神经网络的无监督学习规则/wxy/Desktop/%E7%B1%BB%E8%84%91%E8%AE%A1%E7%AE%97/timg.jpeg">
-<meta property="og:image" content="https://gulico.github.io/2019/11/06/脉冲神经网络（Spiking-Neural-Network，SNN）概述/脉冲神经网络的无监督学习规则/wxy/Desktop/%E7%B1%BB%E8%84%91%E8%AE%A1%E7%AE%97/taylor_series.jpeg">
-<meta property="og:image" content="https://gulico.github.io/2019/11/06/脉冲神经网络（Spiking-Neural-Network，SNN）概述/脉冲神经网络的无监督学习规则/wxy/Desktop/%E7%B1%BB%E8%84%91%E8%AE%A1%E7%AE%97/rule.jpeg">
-<meta property="og:image" content="https://gulico.github.io/2019/11/06/脉冲神经网络（Spiking-Neural-Network，SNN）概述/脉冲神经网络的无监督学习规则/wxy/Desktop/%E7%B1%BB%E8%84%91%E8%AE%A1%E7%AE%97/function.jpeg">
-<meta property="og:image" content="https://gulico.github.io/2019/11/06/脉冲神经网络（Spiking-Neural-Network，SNN）概述/脉冲神经网络的无监督学习规则/stdp4.jpeg">
-<meta property="og:updated_time" content="2019-11-11T01:35:12.904Z">
+<meta property="og:image" content="https://gulico.github.io/2019/11/11/人工神经网络的无监督学习/timg.jpeg">
+<meta property="og:image" content="https://gulico.github.io/2019/11/11/人工神经网络的无监督学习/taylor_series.jpeg">
+<meta property="og:image" content="https://gulico.github.io/2019/11/11/人工神经网络的无监督学习/rule.jpeg">
+<meta property="og:image" content="https://gulico.github.io/2019/11/11/人工神经网络的无监督学习/function.jpeg">
+<meta property="og:image" content="https://gulico.github.io/2019/11/11/人工神经网络的无监督学习/stdp4.jpeg">
+<meta property="og:updated_time" content="2019-11-11T06:10:47.401Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Gulico">
-<meta name="twitter:description" content="人工神经网络的无监督学习输入的是无标签数据，没有用来指导突触权值修改过程的实际输出和期望输出之间的误差或者奖励信号。神经网络通过一些学习算法自动调整网格参数，一般分为两种算法： 全局学习算法，参照全局视图来修改突触； 局部学习算法，每一个神经元自己通过算法根据输入输出来修改权值。 脉冲神经网络的无监督学习是一种具有生物可解释性的学习规则，在机器学习中占用重要的地位。">
-<meta name="twitter:image" content="https://gulico.github.io/2019/11/06/脉冲神经网络（Spiking-Neural-Network，SNN）概述/脉冲神经网络的无监督学习规则/wxy/Desktop/%E7%B1%BB%E8%84%91%E8%AE%A1%E7%AE%97/timg.jpeg">
-  <link rel="canonical" href="https://gulico.github.io/2019/11/06/脉冲神经网络（Spiking-Neural-Network，SNN）概述/脉冲神经网络的无监督学习规则/">
+<meta name="twitter:title" content="人工神经网络的无监督学习">
+<meta name="twitter:description" content="输入的是无标签数据，没有用来指导突触权值修改过程的实际输出和期望输出之间的误差或者奖励信号。神经网络通过一些学习算法自动调整网格参数，一般分为两种算法： 全局学习算法，参照全局视图来修改突触； 局部学习算法，每一个神经元自己通过算法根据输入输出来修改权值。 脉冲神经网络的无监督学习是一种具有生物可解释性的学习规则，在机器学习中占用重要的地位。">
+<meta name="twitter:image" content="https://gulico.github.io/2019/11/11/人工神经网络的无监督学习/timg.jpeg">
+  <link rel="canonical" href="https://gulico.github.io/2019/11/11/人工神经网络的无监督学习/">
 
 
 <script id="page-configurations">
@@ -86,7 +87,7 @@
   };
 </script>
 
-  <title> | Gulico</title>
+  <title>人工神经网络的无监督学习 | Gulico</title>
   
 
 
@@ -250,7 +251,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://gulico.github.io/2019/11/06/脉冲神经网络（Spiking-Neural-Network，SNN）概述/脉冲神经网络的无监督学习规则/">
+    <link itemprop="mainEntityOfPage" href="https://gulico.github.io/2019/11/11/人工神经网络的无监督学习/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Gulico">
@@ -264,7 +265,7 @@
       <header class="post-header">
 
         
-          <h1 class="post-title" itemprop="name headline">
+          <h1 class="post-title" itemprop="name headline">人工神经网络的无监督学习
 
             
           </h1>
@@ -281,20 +282,25 @@
                 
               
 
-              <time title="创建时间：2019-11-06 11:04:20" itemprop="dateCreated datePublished" datetime="2019-11-06T11:04:20+08:00">2019-11-06</time>
+              <time title="创建时间：2019-11-11 09:39:07 / 修改时间：14:10:47" itemprop="dateCreated datePublished" datetime="2019-11-11T09:39:07+08:00">2019-11-11</time>
             </span>
           
             
 
             
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-11-11 09:35:12" itemprop="dateModified" datetime="2019-11-11T09:35:12+08:00">2019-11-11</time>
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
               </span>
-            
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/类脑计算/" itemprop="url" rel="index"><span itemprop="name">类脑计算</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -308,7 +314,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="人工神经网络的无监督学习"><a href="#人工神经网络的无监督学习" class="headerlink" title="人工神经网络的无监督学习"></a>人工神经网络的无监督学习</h1><p>输入的是无标签数据，没有用来指导突触权值修改过程的实际输出和期望输出之间的误差或者奖励信号。</p><p>神经网络通过一些学习算法自动调整网格参数，一般分为两种算法：</p><ol>
+        <p>输入的是无标签数据，没有用来指导突触权值修改过程的实际输出和期望输出之间的误差或者奖励信号。</p><p>神经网络通过一些学习算法自动调整网格参数，一般分为两种算法：</p><ol>
 <li>全局学习算法，参照全局视图来修改突触；</li>
 <li>局部学习算法，每一个神经元自己通过算法根据输入输出来修改权值。</li>
 </ol><p>脉冲神经网络的无监督学习是一种具有生物可解释性的学习规则，在机器学习中占用重要的地位。</p><a id="more"></a>
@@ -327,10 +333,9 @@
 </li>
 <li><p>突触后电位：突触前神经元的脉冲传入突触后，使得突触后神经元的膜电位发生改变。</p>
 </li>
-<li><p>突触具有<strong>兴奋性</strong>和<strong>抑制性</strong>两种类型。</p>
+<li><p>突触具有<strong>兴奋性</strong>和<strong>抑制性</strong>两种类型。<img src="/2019/11/11/人工神经网络的无监督学习/timg.jpeg" alt></p>
 </li>
 </ul>
-<p><img src="/2019/11/06/脉冲神经网络（Spiking-Neural-Network，SNN）概述/脉冲神经网络的无监督学习规则/wxy/Desktop/%E7%B1%BB%E8%84%91%E8%AE%A1%E7%AE%97/timg.jpeg" alt></p>
 <h2 id="突触可塑性机制定义："><a href="#突触可塑性机制定义：" class="headerlink" title="突触可塑性机制定义："></a>突触可塑性机制定义：</h2><p>在体内外各种因素的影响下不断变化、更新和重塑，以适应机体功能。</p>
 <h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><ul>
 <li>短时程</li>
@@ -349,16 +354,16 @@
 <p>突触后神经元$j$的膜电位可以通过突触前神经元$i$的发放频率$v_i$和$w_{ij}$来计算<br>$$<br>u_j=\sum(w_{ij}v_i)<br>$$<br>Hebb学习规则满足局部特性，权值$w_{ij}$只依赖于突触前后的两个神经元。</p>
 <p>神经元的膜电位也可以根据上面的式子来计算$u_j=g^{-1}(v_j)$，其中$g^{-1}$表示$g$反函数的。</p>
 <p>频率模型中突触变化仅与本地突触权值$w_{ij}$相关，因此突触权值的改变量为：<br>$$<br>dw_ij/dt=F(w_{ij};v_i,v_j)<br>$$<br>使用泰勒公式展开可得：</p>
-<p><img src="/2019/11/06/脉冲神经网络（Spiking-Neural-Network，SNN）概述/脉冲神经网络的无监督学习规则/wxy/Desktop/%E7%B1%BB%E8%84%91%E8%AE%A1%E7%AE%97/taylor_series.jpeg" alt></p>
+<p><img src="/2019/11/11/人工神经网络的无监督学习/taylor_series.jpeg" alt></p>
 </li>
 <li><p>变化形式</p>
 <p>设置以上泰勒公式的各个常数为不同的值，可得到学习规则的不同变化形式。</p>
-<p><img src="/2019/11/06/脉冲神经网络（Spiking-Neural-Network，SNN）概述/脉冲神经网络的无监督学习规则/wxy/Desktop/%E7%B1%BB%E8%84%91%E8%AE%A1%E7%AE%97/rule.jpeg" alt></p>
+<p><img src="/2019/11/11/人工神经网络的无监督学习/rule.jpeg" alt></p>
 </li>
 <li><p>突触增强或者抑制的方式</p>
 <p>原始Hebb规则并没有给出减小突触权值的方式，仅给出了增强的参考条件。</p>
 <p>所以我们需要考虑突触抑制机制。</p>
-<p><img src="/2019/11/06/脉冲神经网络（Spiking-Neural-Network，SNN）概述/脉冲神经网络的无监督学习规则/wxy/Desktop/%E7%B1%BB%E8%84%91%E8%AE%A1%E7%AE%97/function.jpeg" alt></p>
+<p><img src="/2019/11/11/人工神经网络的无监督学习/function.jpeg" alt></p>
 </li>
 </ol>
 <h2 id="Hebb学习规则相关性质"><a href="#Hebb学习规则相关性质" class="headerlink" title="Hebb学习规则相关性质"></a>Hebb学习规则相关性质</h2><ol>
@@ -403,7 +408,7 @@
 </ul>
 </li>
 </ul>
-<p><img src="/2019/11/06/脉冲神经网络（Spiking-Neural-Network，SNN）概述/脉冲神经网络的无监督学习规则/stdp4.jpeg" alt></p>
+<p><img src="/2019/11/11/人工神经网络的无监督学习/stdp4.jpeg" alt></p>
 </li>
 </ol>
 <h2 id="基于局部变量的stdp实现"><a href="#基于局部变量的stdp实现" class="headerlink" title="基于局部变量的stdp实现"></a>基于局部变量的stdp实现</h2><ol>
@@ -424,6 +429,15 @@
       
 
       <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/脉冲神经网络-机器学习/" rel="tag"># -[脉冲神经网络] -[机器学习]</a>
+            
+          </div>
+        
 
         
 
@@ -537,7 +551,9 @@
         
           
         
-        <span class="site-state-item-count">3</span>
+          
+        
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -593,7 +609,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#人工神经网络的无监督学习"><span class="nav-number">1.</span> <span class="nav-text">人工神经网络的无监督学习</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#突触可塑性机制"><span class="nav-number">2.</span> <span class="nav-text">突触可塑性机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#突触相关基本概念："><span class="nav-number">2.1.</span> <span class="nav-text">突触相关基本概念：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#突触可塑性机制定义："><span class="nav-number">2.2.</span> <span class="nav-text">突触可塑性机制定义：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分类"><span class="nav-number">2.3.</span> <span class="nav-text">分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#突触长时程增强LTP"><span class="nav-number">2.4.</span> <span class="nav-text">突触长时程增强LTP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#突触长时程抑制LTD"><span class="nav-number">2.5.</span> <span class="nav-text">突触长时程抑制LTD</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hebb学习规则"><span class="nav-number">3.</span> <span class="nav-text">Hebb学习规则</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hebb学习规则的数学模型"><span class="nav-number">3.1.</span> <span class="nav-text">Hebb学习规则的数学模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hebb学习规则相关性质"><span class="nav-number">3.2.</span> <span class="nav-text">Hebb学习规则相关性质</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#STDP学习规则"><span class="nav-number">4.</span> <span class="nav-text">STDP学习规则</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#STDP学习规则的数学模型"><span class="nav-number">4.1.</span> <span class="nav-text">STDP学习规则的数学模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于局部变量的stdp实现"><span class="nav-number">4.2.</span> <span class="nav-text">基于局部变量的stdp实现</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#突触可塑性机制"><span class="nav-number">1.</span> <span class="nav-text">突触可塑性机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#突触相关基本概念："><span class="nav-number">1.1.</span> <span class="nav-text">突触相关基本概念：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#突触可塑性机制定义："><span class="nav-number">1.2.</span> <span class="nav-text">突触可塑性机制定义：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分类"><span class="nav-number">1.3.</span> <span class="nav-text">分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#突触长时程增强LTP"><span class="nav-number">1.4.</span> <span class="nav-text">突触长时程增强LTP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#突触长时程抑制LTD"><span class="nav-number">1.5.</span> <span class="nav-text">突触长时程抑制LTD</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hebb学习规则"><span class="nav-number">2.</span> <span class="nav-text">Hebb学习规则</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hebb学习规则的数学模型"><span class="nav-number">2.1.</span> <span class="nav-text">Hebb学习规则的数学模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hebb学习规则相关性质"><span class="nav-number">2.2.</span> <span class="nav-text">Hebb学习规则相关性质</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#STDP学习规则"><span class="nav-number">3.</span> <span class="nav-text">STDP学习规则</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#STDP学习规则的数学模型"><span class="nav-number">3.1.</span> <span class="nav-text">STDP学习规则的数学模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于局部变量的stdp实现"><span class="nav-number">3.2.</span> <span class="nav-text">基于局部变量的stdp实现</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -692,6 +708,56 @@
 
   
 
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', function() {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
   
 
   
