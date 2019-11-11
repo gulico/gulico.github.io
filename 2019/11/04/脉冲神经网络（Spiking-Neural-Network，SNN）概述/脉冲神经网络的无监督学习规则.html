@@ -1,0 +1,106 @@
+<h1 id="人工神经网络的无监督学习"><a href="#人工神经网络的无监督学习" class="headerlink" title="人工神经网络的无监督学习"></a>人工神经网络的无监督学习</h1><p>输入的是无标签数据，没有用来指导突触权值修改过程的实际输出和期望输出之间的误差或者奖励信号。</p>
+<p>神经网络通过一些学习算法自动调整网格参数，一般分为两种算法：</p>
+<ol>
+<li>全局学习算法，参照全局视图来修改突触；</li>
+<li>局部学习算法，每一个神经元自己通过算法根据输入输出来修改权值。</li>
+</ol>
+<p>脉冲神经网络的无监督学习是一种具有生物可解释性的学习规则，在机器学习中占用重要的地位。</p>
+<p><strong>突触可塑性机制</strong>是生物神经系统学习和记忆的基础。</p>
+<p><strong>Hebb规则</strong>指出：两个神经元之间的突触连接强度随着两个神经元状态的变化而变化，并且只与这两个神经元有关。</p>
+<p>而<strong>脉冲时间可塑性机制stdp</strong>是Hebb规则的扩展。</p>
+<h1 id="突触可塑性机制"><a href="#突触可塑性机制" class="headerlink" title="突触可塑性机制"></a>突触可塑性机制</h1><h2 id="突触相关基本概念："><a href="#突触相关基本概念：" class="headerlink" title="突触相关基本概念："></a>突触相关基本概念：</h2><ul>
+<li><p>突触：神经元之间相互连接，实现信息传递的部分。</p>
+</li>
+<li><p>突触前神经元：传出信息的神经元。</p>
+</li>
+<li><p>突触后神经元：接收信息的神经元。</p>
+</li>
+<li><p>突触后电位：突触前神经元的脉冲传入突触后，使得突触后神经元的膜电位发生改变。</p>
+</li>
+<li><p>突触具有<strong>兴奋性</strong>和<strong>抑制性</strong>两种类型。</p>
+</li>
+</ul>
+<p><img src="/Users/wxy/Desktop/%E7%B1%BB%E8%84%91%E8%AE%A1%E7%AE%97/timg.jpeg" alt=""></p>
+<h2 id="突触可塑性机制定义："><a href="#突触可塑性机制定义：" class="headerlink" title="突触可塑性机制定义："></a>突触可塑性机制定义：</h2><p>在体内外各种因素的影响下不断变化、更新和重塑，以适应机体功能。</p>
+<h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><ul>
+<li>短时程</li>
+<li>长时程<ul>
+<li>长时程增强（long-term potentiation,LTP）</li>
+<li>长时程抑制（long-term depression,LTD）</li>
+</ul>
+</li>
+</ul>
+<h2 id="突触长时程增强LTP"><a href="#突触长时程增强LTP" class="headerlink" title="突触长时程增强LTP"></a>突触长时程增强LTP</h2><p>是发生在两个神经元信号传输中的一种持久的增强现象，能够同步的刺激两个神经元。</p>
+<h2 id="突触长时程抑制LTD"><a href="#突触长时程抑制LTD" class="headerlink" title="突触长时程抑制LTD"></a>突触长时程抑制LTD</h2><p>与突触长时程相反，表示突触传递效率长时程降低。</p>
+<h1 id="Hebb学习规则"><a href="#Hebb学习规则" class="headerlink" title="Hebb学习规则"></a>Hebb学习规则</h1><p>该规则给出的突触可塑性假设为：如果神经元A的轴突与神经元B足够接近，并能反复或持续地刺激神经元B并使之发放脉冲，神经元A的轴突到神经元B的突触效能就会增强。</p>
+<h2 id="Hebb学习规则的数学模型"><a href="#Hebb学习规则的数学模型" class="headerlink" title="Hebb学习规则的数学模型"></a>Hebb学习规则的数学模型</h2><ol>
+<li><p>一般性框架</p>
+<p><strong>神经元j</strong>的活动可以通过他发放的<strong>频率$v_j$</strong>来描述，发放频率可以表示为<strong>神经元膜电位$u_j$</strong>的函数：<br>$$<br>v_j=g(u_j)<br>$$<br>$g$为非线性单调递增函数；</p>
+<p>突触后神经元$j$的膜电位可以通过突触前神经元$i$的发放频率$v_i$和$w_{ij}$来计算<br>$$<br>u_j=\sum(w_{ij}v_i)<br>$$<br>Hebb学习规则满足局部特性，权值$w_{ij}$只依赖于突触前后的两个神经元。</p>
+<p>神经元的膜电位也可以根据上面的式子来计算$u_j=g^{-1}(v_j)$，其中$g^{-1}$表示$g$反函数的。</p>
+<p>频率模型中突触变化仅与本地突触权值$w_{ij}$相关，因此突触权值的改变量为：<br>$$<br>dw_ij/dt=F(w_{ij};v_i,v_j)<br>$$<br>使用泰勒公式展开可得：</p>
+<p><img src="/Users/wxy/Desktop/%E7%B1%BB%E8%84%91%E8%AE%A1%E7%AE%97/taylor_series.jpeg" alt=""></p>
+</li>
+<li><p>变化形式</p>
+<p>设置以上泰勒公式的各个常数为不同的值，可得到学习规则的不同变化形式。</p>
+<p><img src="/Users/wxy/Desktop/%E7%B1%BB%E8%84%91%E8%AE%A1%E7%AE%97/rule.jpeg" alt=""></p>
+</li>
+<li><p>突触增强或者抑制的方式</p>
+<p>原始Hebb规则并没有给出减小突触权值的方式，仅给出了增强的参考条件。</p>
+<p>所以我们需要考虑突触抑制机制。</p>
+<p><img src="/Users/wxy/Desktop/%E7%B1%BB%E8%84%91%E8%AE%A1%E7%AE%97/function.jpeg" alt=""></p>
+</li>
+</ol>
+<h2 id="Hebb学习规则相关性质"><a href="#Hebb学习规则相关性质" class="headerlink" title="Hebb学习规则相关性质"></a>Hebb学习规则相关性质</h2><ol>
+<li><p>有界性</p>
+<p>兴奋性突触的权值应处于一个有界的范围$[0,w_{max}]$</p>
+</li>
+<li><p>竞争性</p>
+<p>一些权值增大的时候，其他权值必须减少。</p>
+</li>
+<li><p>稳定性</p>
+<p>虽然学习阶段结束，突触权值被认为是固定的参数，但是神经系统通过处理不同的输入，系统要保持一定的适应性，且之前学习到的信息不能丢失。</p>
+</li>
+</ol>
+<h1 id="STDP学习规则"><a href="#STDP学习规则" class="headerlink" title="STDP学习规则"></a>STDP学习规则</h1><p>Hebb学习规则根据神经元脉冲发放的<strong>频率</strong>进行突触权值的更新。</p>
+<p>而实际上，突触前和突触后<strong>脉冲发放相对时间差</strong>对神经元之间的突触的改变方向和大小具有关键作用。</p>
+<h2 id="STDP学习规则的数学模型"><a href="#STDP学习规则的数学模型" class="headerlink" title="STDP学习规则的数学模型"></a>STDP学习规则的数学模型</h2><p>突触权值的变化是一个关于时间的分段函数，突触的变化值取决于突触前后脉冲的相对时间。</p>
+<ol>
+<li><p>STDP学习规则的一般形式</p>
+<p>设：突触前神经元i</p>
+<p>突触后神经元j</p>
+<p>两者之间连接的神经上的权值为$w_{ij}$</p>
+<p>则有STDP学习机制为：</p>
+<ul>
+<li>如果在突触前神经元i 发放的脉冲到达突触之后，突触后神经元j才响应并发放脉冲，则权值$w_{ij}$增加</li>
+<li>如果在突触后神经元j发放脉冲后，突触前神经元i才传递脉冲，那么这个信息可能被忽略，权值$w_{ij}$会减弱</li>
+</ul>
+<p>ps：存在与以上机制相反的突触变化过程，称为anti-STDP学习机制。</p>
+</li>
+<li><p>STDP学习规则学习窗口</p>
+<p><strong>待更新</strong></p>
+</li>
+</ol>
+<ol start="3">
+<li><p>突触权值的学习过程分析</p>
+<p>主要分为四种情况：</p>
+<ul>
+<li>如图(a)，当突触前和突触后神经元都不发放脉冲时，零阶项$a_0&lt;0$将引起突触权值$w_{ij}$</li>
+<li>如图(b)，当突触前脉冲到达或突触后脉冲发放时，线性阶项会改变突触权值。当$a_1^{pre}&gt;0$时，当突触前脉冲在$t_i^f$时到达，引起权值$w_{ij}$增加；当$a_1^{post}&lt;0$时，<strong>每一个突触后脉冲</strong>在$t_j^f$时到达，引起权值$w_{ij}$减小。</li>
+<li>如图(c)，假设突触后与突触前脉冲时间差$s=t_j^f-t_i^f$<strong>在学习窗口内</strong>。<ul>
+<li>当$s\ge0$时，$a_2^{post,pre}(s)&gt;0$，则如果突触后脉冲$t_j^f$在突触前脉冲的到达时间$t_i^f$之后的较短时间内发放，在$t_j^f$时刻，突触权值的改变量为$a_1^{post}+a_2^{post,pre}(s)&gt;0$</li>
+<li>当$s&lt;0$时，$a_2^{post,pre}(-s)&lt;0$，则在$t_i^f$时刻，突触权值的改变量为$a_1^{post}+a_2^{post,pre}(-s)&lt;0$</li>
+</ul>
+</li>
+</ul>
+<p><img src="_post/stdp4.jpeg" alt=""></p>
+</li>
+</ol>
+<h2 id="基于局部变量的stdp实现"><a href="#基于局部变量的stdp实现" class="headerlink" title="基于局部变量的stdp实现"></a>基于局部变量的stdp实现</h2><ol>
+<li><p>基于脉冲对的STDP规则</p>
+<p><strong>待更新</strong></p>
+</li>
+</ol>
+<ol start="2">
+<li>基于三脉冲的STDP规则</li>
+</ol>
