@@ -55,13 +55,13 @@
   };
 </script>
 
-  <meta name="description" content="本文主要是AAAI-18上发表的论文《A Plasticity-Centric Approach to Train the Non-Differential Spiking Neural Networks》的阅读笔记。脉冲神经网络概述之前转载的文章：脉冲神经网络（Spiking Neural Network，SNN）概述">
+  <meta name="description" content="本文主要是AAAI-18上发表的论文《A Plasticity-Centric Approach to Train the Non-Differential Spiking Neural Networks》的阅读笔记。脉冲神经网络概述之前转载的文章：脉冲神经网络（Spiking Neural Network，SNN）概述)">
 <meta name="keywords" content="脉冲神经网络">
 <meta property="og:type" content="article">
 <meta property="og:title" content="以生物可塑性为核心的类脑脉冲神经网络学习笔记">
 <meta property="og:url" content="https://gulico.github.io/2019/11/21/以生物可塑性为核心的类脑脉冲神经网络学习笔记/index.html">
 <meta property="og:site_name" content="Gulico">
-<meta property="og:description" content="本文主要是AAAI-18上发表的论文《A Plasticity-Centric Approach to Train the Non-Differential Spiking Neural Networks》的阅读笔记。脉冲神经网络概述之前转载的文章：脉冲神经网络（Spiking Neural Network，SNN）概述">
+<meta property="og:description" content="本文主要是AAAI-18上发表的论文《A Plasticity-Centric Approach to Train the Non-Differential Spiking Neural Networks》的阅读笔记。脉冲神经网络概述之前转载的文章：脉冲神经网络（Spiking Neural Network，SNN）概述)">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gulico.github.io/2019/11/21/以生物可塑性为核心的类脑脉冲神经网络学习笔记/LIF.png">
 <meta property="og:image" content="https://gulico.github.io/2019/11/21/以生物可塑性为核心的类脑脉冲神经网络学习笔记/The_Multi_layer_SNN.jpg">
@@ -77,7 +77,7 @@
 <meta property="og:updated_time" content="2019-11-24T08:27:55.870Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="以生物可塑性为核心的类脑脉冲神经网络学习笔记">
-<meta name="twitter:description" content="本文主要是AAAI-18上发表的论文《A Plasticity-Centric Approach to Train the Non-Differential Spiking Neural Networks》的阅读笔记。脉冲神经网络概述之前转载的文章：脉冲神经网络（Spiking Neural Network，SNN）概述">
+<meta name="twitter:description" content="本文主要是AAAI-18上发表的论文《A Plasticity-Centric Approach to Train the Non-Differential Spiking Neural Networks》的阅读笔记。脉冲神经网络概述之前转载的文章：脉冲神经网络（Spiking Neural Network，SNN）概述)">
 <meta name="twitter:image" content="https://gulico.github.io/2019/11/21/以生物可塑性为核心的类脑脉冲神经网络学习笔记/LIF.png">
   <link rel="canonical" href="https://gulico.github.io/2019/11/21/以生物可塑性为核心的类脑脉冲神经网络学习笔记/">
 
@@ -357,7 +357,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>本文主要是AAAI-18上发表的论文《A Plasticity-Centric Approach to Train the Non-Differential Spiking Neural Networks》的阅读笔记。</p><h1 id="脉冲神经网络概述"><a href="#脉冲神经网络概述" class="headerlink" title="脉冲神经网络概述"></a>脉冲神经网络概述</h1><p>之前转载的文章：<a href="[https://gulico.github.io/2019/11/04/%E8%84%89%E5%86%B2%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%EF%BC%88Spiking-Neural-Network%EF%BC%8CSNN%EF%BC%89%E6%A6%82%E8%BF%B0/](https://gulico.github.io/2019/11/04/脉冲神经网络（Spiking-Neural-Network，SNN）概述/)">脉冲神经网络（Spiking Neural Network，SNN）概述</a></p><a id="more"></a>
+        <p>本文主要是AAAI-18上发表的论文《A Plasticity-Centric Approach to Train the Non-Differential Spiking Neural Networks》的阅读笔记。</p><h1 id="脉冲神经网络概述"><a href="#脉冲神经网络概述" class="headerlink" title="脉冲神经网络概述"></a>脉冲神经网络概述</h1><p>之前转载的文章：<a href="[https://gulico.github.io/2019/11/04/%E8%84%89%E5%86%B2%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%EF%BC%88Spiking-Neural-Network%EF%BC%8CSNN%EF%BC%89%E6%A6%82%E8%BF%B0/](https://gulico.github.io/2019/11/04/脉冲神经网络（Spiking-Neural-Network，SNN）概述/">脉冲神经网络（Spiking Neural Network，SNN）概述</a>)</p><a id="more"></a>
 
 <h1 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h1><ul>
 <li>LF模型<br>硬件模型：IF模型只有一个电容，没有并联的电阻，因为电阻实际等效于泄露电流，对应LIF模型。<br>dVdt=1CI(t)dVdt=1CI(t)</li>
@@ -428,7 +428,6 @@
 <h3 id="基于STDP的突触权值被动更新"><a href="#基于STDP的突触权值被动更新" class="headerlink" title="基于STDP的突触权值被动更新"></a>基于STDP的突触权值被动更新</h3><p>stdp规则也有许多人提出过不同的细则，我们这里使用Bengio在2015年提出的规则：突触权值变化量等于突触前膜电位与突触后膜电位关于时间的变化率。 </p>
 <p>（这边的公式是个正比关系，不是很明确，所以这里邮件给张铁林研究员，他说叫我去看了一下differentials stdp）</p>
 <h3 id="snn学习算法伪码"><a href="#snn学习算法伪码" class="headerlink" title="snn学习算法伪码"></a>snn学习算法伪码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">1. 空间和时间数据标准化，以及变量初始化.</span><br><span class="line">初始化多层前馈网络，lif神经元模型, 使用随机均匀分布对权值$w_&#123;ij&#125;$进行初始化，神经元膜电位状态$V_i$</span><br><span class="line">设置迭代时间$I_&#123;ite&#125;$，模拟时间T，微分时间Δt，学习率η（前两层） 和 ηc（最后一层）;</span><br><span class="line">2. 开始训练程序:</span><br><span class="line">(1). Load training samples;</span><br><span class="line">//加载训练样本</span><br><span class="line"></span><br><span class="line">(2). Update V FFi by Equation (5) during the feed forward inference learning;</span><br><span class="line">//在前馈阶段，根据等式5更新突触后膜电位V FFi</span><br><span class="line">(3). Update V ESi by Equation (10) during the unsupervised equilibrium state learning;</span><br><span class="line">//在无监督平衡阶段，根据等式10更新突触后膜电位V ESi</span><br><span class="line">(4). Integrate V FFi and V ESi by Equation (11);</span><br><span class="line">//通过等式11，整合前面两步计算得到的膜电位V FFi和V ESi</span><br><span class="line">(5). Update Vi by Equation (14) with supervision;</span><br><span class="line">//根据等式14，通过教学信号更新vi</span><br><span class="line">(6). Passively update synaptic weights wj,i by Equation (15).</span><br><span class="line">//被动更新突触权值</span><br><span class="line"></span><br><span class="line">(7). Iterative training from Step (2) to Step (6), save final wj,i.</span><br><span class="line">//循环步骤2-6，保存最后的权值</span><br><span class="line"></span><br><span class="line">3. 开始测试程序:</span><br><span class="line">(1). Test the performance of trained SNN with only feed forward</span><br><span class="line">step based on saved wj,i.</span><br><span class="line">//通过基于最后得到的权值，进行前向传播，测试snn的性能</span><br><span class="line">(2). Output the performance of test samples without cross validation;</span><br><span class="line">//不实用交叉验证的情况下输出测试样例的性能</span><br><span class="line">4. End SNN learning.</span><br></pre></td></tr></table></figure>
-
 <h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><p><img src="/2019/11/21/以生物可塑性为核心的类脑脉冲神经网络学习笔记/W020180119603990697371.jpg" alt></p>
 <p>为了验证上述四个步骤网络训练的有效性，我们采用最简的三层脉冲神经网络进行测试。</p>
 <p>如图，最终在MNIST任务上达到分类正确率为98.52%。</p>

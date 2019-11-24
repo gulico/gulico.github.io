@@ -379,10 +379,16 @@
 <h1 id="Hebb学习规则"><a href="#Hebb学习规则" class="headerlink" title="Hebb学习规则"></a>Hebb学习规则</h1><p>该规则给出的突触可塑性假设为：如果神经元A的轴突与神经元B足够接近，并能反复或持续地刺激神经元B并使之发放脉冲，神经元A的轴突到神经元B的突触效能就会增强。</p>
 <h2 id="Hebb学习规则的数学模型"><a href="#Hebb学习规则的数学模型" class="headerlink" title="Hebb学习规则的数学模型"></a>Hebb学习规则的数学模型</h2><ol>
 <li><p>一般性框架</p>
-<p><strong>神经元j</strong>的活动可以通过他发放的<strong>频率$v_j$</strong>来描述，发放频率可以表示为<strong>神经元膜电位$u_j$</strong>的函数：<br>$$<br>v_j=g(u_j)<br>$$<br>$g$为非线性单调递增函数；</p>
-<p>突触后神经元$j$的膜电位可以通过突触前神经元$i$的发放频率$v_i$和$w_{ij}$来计算<br>$$<br>u_j=\sum(w_{ij}v_i)<br>$$<br>Hebb学习规则满足局部特性，权值$w_{ij}$只依赖于突触前后的两个神经元。</p>
+<p><strong>神经元j</strong>的活动可以通过他发放的<strong>频率$v_j$</strong>来描述，发放频率可以表示为<strong>神经元膜电位$u_j$</strong>的函数：</p>
+<script type="math/tex; mode=display">
+v_j=g(u_j)</script><p>$g$为非线性单调递增函数；</p>
+<p>突触后神经元$j$的膜电位可以通过突触前神经元$i$的发放频率$v<em>i$和$w</em>{ij}$来计算</p>
+<script type="math/tex; mode=display">
+u_j=\sum(w_{ij}v_i)</script><p>Hebb学习规则满足局部特性，权值$w_{ij}$只依赖于突触前后的两个神经元。</p>
 <p>神经元的膜电位也可以根据上面的式子来计算$u_j=g^{-1}(v_j)$，其中$g^{-1}$表示$g$反函数的。</p>
-<p>频率模型中突触变化仅与本地突触权值$w_{ij}$相关，因此突触权值的改变量为：<br>$$<br>dw_ij/dt=F(w_{ij};v_i,v_j)<br>$$<br>使用泰勒公式展开可得：</p>
+<p>频率模型中突触变化仅与本地突触权值$w_{ij}$相关，因此突触权值的改变量为：</p>
+<script type="math/tex; mode=display">
+dw_ij/dt=F(w_{ij};v_i,v_j)</script><p>使用泰勒公式展开可得：</p>
 <p><img src="/2019/11/11/脉冲神经网络的无监督学习规则/taylor_series.jpeg" alt></p>
 </li>
 <li><p>变化形式</p>
@@ -425,12 +431,12 @@
 <p><strong>待更新</strong></p>
 </li>
 </ol>
-<ol start="3">
+<ol>
 <li><p>突触权值的学习过程分析</p>
 <p>主要分为四种情况：</p>
 <ul>
-<li>如图(a)，当突触前和突触后神经元都不发放脉冲时，零阶项$a_0&lt;0$将引起突触权值$w_{ij}$</li>
-<li>如图(b)，当突触前脉冲到达或突触后脉冲发放时，线性阶项会改变突触权值。当$a_1^{pre}&gt;0$时，当突触前脉冲在$t_i^f$时到达，引起权值$w_{ij}$增加；当$a_1^{post}&lt;0$时，<strong>每一个突触后脉冲</strong>在$t_j^f$时到达，引起权值$w_{ij}$减小。</li>
+<li>如图(a)，当突触前和突触后神经元都不发放脉冲时，零阶项$a<em>0&lt;0$将引起突触权值$w</em>{ij}$</li>
+<li>如图(b)，当突触前脉冲到达或突触后脉冲发放时，线性阶项会改变突触权值。当$a<em>1^{pre}&gt;0$时，当突触前脉冲在$t_i^f$时到达，引起权值$w</em>{ij}$增加；当$a<em>1^{post}&lt;0$时，<strong>每一个突触后脉冲</strong>在$t_j^f$时到达，引起权值$w</em>{ij}$减小。</li>
 <li>如图(c)，假设突触后与突触前脉冲时间差$s=t_j^f-t_i^f$<strong>在学习窗口内</strong>。<ul>
 <li>当$s\ge0$时，$a_2^{post,pre}(s)&gt;0$，则如果突触后脉冲$t_j^f$在突触前脉冲的到达时间$t_i^f$之后的较短时间内发放，在$t_j^f$时刻，突触权值的改变量为$a_1^{post}+a_2^{post,pre}(s)&gt;0$</li>
 <li>当$s&lt;0$时，$a_2^{post,pre}(-s)&lt;0$，则在$t_i^f$时刻，突触权值的改变量为$a_1^{post}+a_2^{post,pre}(-s)&lt;0$</li>
@@ -445,7 +451,7 @@
 <p><strong>待更新</strong></p>
 </li>
 </ol>
-<ol start="2">
+<ol>
 <li>基于三脉冲的STDP规则</li>
 </ol>
 

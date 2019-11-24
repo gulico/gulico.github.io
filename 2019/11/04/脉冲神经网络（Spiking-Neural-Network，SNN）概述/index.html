@@ -350,14 +350,14 @@
 </li>
 </ol>
 <p><img src="/2019/11/04/脉冲神经网络（Spiking-Neural-Network，SNN）概述/feed-forward_spiking_neural_network.jpeg" alt></p>
-<ol start="2">
+<ol>
 <li><h2 id="递归型脉冲神经网络"><a href="#递归型脉冲神经网络" class="headerlink" title="递归型脉冲神经网络"></a>递归型脉冲神经网络</h2><p>递归型神经网络不同于多层前馈神经网络和单层神经网络，网络结构中具有反馈回路，即网络中神经元的输出是以前时间步长上神经元输出的递归函数。递归神经网络可以模拟时间序列，用来完成控制、预测等任务，其反馈机制一方面使得它们能够表现更为复杂的时变系统；另一方面也使得有效学习算法的设计及其收敛性分析更为困难。传统递归人工神经网络的两种经典学习算法分别为<strong>实时递归学习</strong>（real-time recurrent learning）算法和<strong>随时间演化的反向传播</strong>（backpropagation through time）算法，这两种算法都是递归地计算梯度的学习算法。</p>
 <p>递归脉冲神经网络是指<strong>网络中具有反馈回路的脉冲神经网络</strong>，由于其信息编码及反馈机制不同于传统递归人工神经网络，由此网络的学习算法构建及动力学分析较为困难。递归脉冲神经网络可应用于诸多复杂问题的求解中，如语言建模、手写数字识别以及语音识别等。递归脉冲神经网络可分为两大类：<strong>全局递归脉冲神经网络</strong>（fully recurrent spiking neural network）；另一类是<strong>局部脉冲神经网络</strong>（locally recurrent spiking neural network）。</p>
 </li>
 </ol>
 <p><img src="/2019/11/04/脉冲神经网络（Spiking-Neural-Network，SNN）概述/fully_recurrent.jpeg" alt></p>
 <p><img src="/2019/11/04/脉冲神经网络（Spiking-Neural-Network，SNN）概述/external_recurrent.jpeg" alt></p>
-<ol start="3">
+<ol>
 <li><h2 id="混合型脉冲神经网络"><a href="#混合型脉冲神经网络" class="headerlink" title="混合型脉冲神经网络"></a>混合型脉冲神经网络</h2><p>混合型脉冲神经网络即包括前馈型结构，又包含递归型结构。</p>
 </li>
 </ol>
@@ -378,8 +378,7 @@
 <li><h2 id="脉冲神经网络的监督学习"><a href="#脉冲神经网络的监督学习" class="headerlink" title="脉冲神经网络的监督学习"></a>脉冲神经网络的监督学习</h2><p>脉冲神经网络的监督学习是指对于给定的多个输入脉冲序列和多个目标脉冲序列，寻找脉冲神经网络合适的突触权值矩阵，使神经元的输出脉冲序列与对应的目标脉冲序列尽可能接近，即两者的误差评价函数最小。对于脉冲神经网络来说，神经信息以脉冲序列的形式表示，神经元内部状态变量及误差函数不再满足连续可微的性质，构建有效的脉冲神经网络监督学习算法非常困难，同时也是该领域的一个重要的研究方向。</p>
 <p>根据监督学习所采用的基本思想不同，可以将现有的监督学习算法分为三类：</p>
 <ul>
-<li><p>基于<strong>梯度下降</strong>的监督学习算法的基本思想是<strong>利用神经元目标输出与实际输出之间的误差以及误差反向传播过程，得到梯度下降计算结果作为突触权值调整的参考量，最终减小这种误差</strong>。基于梯度下降的监督学习算法是一种数学分析方法，在学习规则的推导过程中，要求神经元模型的状态变量必须是有解析的表达式，主要采用固定阈值的线性神经元模型，如<strong>脉冲响应模型</strong>（spike response model）和<strong>Integrate-and-Fire神经元模型</strong>等。</p>
-</li>
+<li>基于<strong>梯度下降</strong>的监督学习算法的基本思想是<strong>利用神经元目标输出与实际输出之间的误差以及误差反向传播过程，得到梯度下降计算结果作为突触权值调整的参考量，最终减小这种误差</strong>。基于梯度下降的监督学习算法是一种数学分析方法，在学习规则的推导过程中，要求神经元模型的状态变量必须是有解析的表达式，主要采用固定阈值的线性神经元模型，如<strong>脉冲响应模型</strong>（spike response model）和<strong>Integrate-and-Fire神经元模型</strong>等。</li>
 <li><p>基于<strong>突触可塑性</strong>的监督学习算法的基本思想是<strong>利用神经元发放脉冲序列的时间相关性所引起的突触可塑性机制，设计神经元突触权值调整的学习规则</strong>，这是一种具有生物可解释性的监督学习。</p>
 </li>
 <li><p>基于<strong>脉冲序列卷积</strong>的监督学习算法<strong>通过脉冲序列内积的差异构造脉冲神经网络的监督学习算法，突触权值的调整依赖于特定核函数的卷积计算</strong>，可实现脉冲序列时空模式的学习。</p>
