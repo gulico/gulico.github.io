@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    save_scroll: false,
+    copycode: {"enable":true,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="Marchisio, A., Nanfa, G., Khalid, F., Hanif, M. A., Martina, M., &amp;amp; Shafique, M. (2019). SNN under Attack: are Spiking Deep Belief Networks vulnerable to Adversarial Examples? http://arxiv.org/abs/">
+<meta name="keywords" content="攻击对抗,脉冲神经网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="脉冲深层信任网络容易受到对抗性例子的攻击吗（学习笔记）">
+<meta property="og:url" content="https://gulico.github.io/2020/02/04/脉冲深层信任网络容易受到对抗性例子的攻击吗/index.html">
+<meta property="og:site_name" content="Gulico">
+<meta property="og:description" content="Marchisio, A., Nanfa, G., Khalid, F., Hanif, M. A., Martina, M., &amp;amp; Shafique, M. (2019). SNN under Attack: are Spiking Deep Belief Networks vulnerable to Adversarial Examples? http://arxiv.org/abs/">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://gulico.github.io/2020/02/04/脉冲深层信任网络容易受到对抗性例子的攻击吗/methodology.png">
+<meta property="og:image" content="https://gulico.github.io/2020/02/04/脉冲深层信任网络容易受到对抗性例子的攻击吗/Algorithm.png">
+<meta property="og:updated_time" content="2020-07-20T06:32:44.106Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="脉冲深层信任网络容易受到对抗性例子的攻击吗（学习笔记）">
+<meta name="twitter:description" content="Marchisio, A., Nanfa, G., Khalid, F., Hanif, M. A., Martina, M., &amp;amp; Shafique, M. (2019). SNN under Attack: are Spiking Deep Belief Networks vulnerable to Adversarial Examples? http://arxiv.org/abs/">
+<meta name="twitter:image" content="https://gulico.github.io/2020/02/04/脉冲深层信任网络容易受到对抗性例子的攻击吗/methodology.png">
+  <link rel="canonical" href="https://gulico.github.io/2020/02/04/脉冲深层信任网络容易受到对抗性例子的攻击吗/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>脉冲深层信任网络容易受到对抗性例子的攻击吗（学习笔记） | Gulico</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  <div class="container sidebar-position-left">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Gulico</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-guestbook">
+      
+    
+
+    <a href="/guestbook" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>留言</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+    
+
+</nav>
+  <div class="site-search">
+    
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content page-post-detail">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://gulico.github.io/2020/02/04/脉冲深层信任网络容易受到对抗性例子的攻击吗/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gulico">
+      <meta itemprop="description" content="I`ll spend forever wondering if you knew">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gulico">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">脉冲深层信任网络容易受到对抗性例子的攻击吗（学习笔记）
+
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-02-04 14:29:17" itemprop="dateCreated datePublished" datetime="2020-02-04T14:29:17+08:00">2020-02-04</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-20 14:32:44" itemprop="dateModified" datetime="2020-07-20T14:32:44+08:00">2020-07-20</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/攻击对抗/" itemprop="url" rel="index"><span itemprop="name">攻击对抗</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/02/04/脉冲深层信任网络容易受到对抗性例子的攻击吗/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/02/04/脉冲深层信任网络容易受到对抗性例子的攻击吗/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Marchisio, A., Nanfa, G., Khalid, F., Hanif, M. A., Martina, M., &amp; Shafique, M. (2019). <em>SNN under Attack: are Spiking Deep Belief Networks vulnerable to Adversarial Examples?</em> <a href="http://arxiv.org/abs/1902.01147" target="_blank" rel="noopener">http://arxiv.org/abs/1902.01147</a></p><a id="more"></a>
+<p>使用脉冲深层信仰网络（SDBN，Spiking Deep Belief Networks）进行MNIST数据库分类时，我们表明，在应用于测试图像的数据中毒随机攻击（poisoning random attacks）中，SNN准确度会随着噪声大小而相应降低。 </p>
+<p>此外，通过将噪声应用于训练图像，可以提高SDBN的泛化能力。 </p>
+<p>我们开发了一种黑盒攻击方法，可通过贪婪算法自动生成无法感知且强大的攻击样本，这是SNN的首创。</p>
+<p>深度信念网络（DBN）是多层网络，广泛用于分类问题。</p>
+<p>DBN通过堆叠预先训练的受限玻尔兹曼机（RBM），基于能量的模型来实现，该模型由两层神经元组成，一层是隐藏的，一层是可见的，完全对称地连接。 RBM通常在无监督学习的情况下进行训练，以提取保存在隐藏单元中的信息，然后进行有监督的训练以基于这些特征训练分类器[32]。 与DBN相比，添加DBN（SDBN）可以提高能源效率和计算速度。</p>
+<h1 id="贡献："><a href="#贡献：" class="headerlink" title="贡献："></a>贡献：</h1><ol>
+<li>首次为SNN生成难以察觉且强大的攻击样本。<ul>
+<li>评估：攻击应用于具有相同层数和神经元数量的SDBN和DNN。</li>
+<li>这种攻击以前仅应用于DNN模型。</li>
+</ul>
+</li>
+<li>调查了SDBN对随机噪声和对抗性攻击的脆弱性，旨在探索与DNN的相似性和差异。<ul>
+<li>实验表明，将随机噪声应用于给定的SDBN时，其分类精度会通过增加噪声幅度而降低。</li>
+</ul>
+</li>
+<li>攻击SDBN，与DNN相比，输出概率遵循不同的行为：尽管对抗性图像仍然不可察觉，但并非总是能够保证错误分类。</li>
+</ol>
+<p>（1）我们分析了在将随机噪声添加到输入图像时，SDBN精度如何变化（第3.2和3.3节）。</p>
+<p>（2）当在训练图像上添加随机噪声时，我们评估了SDBN的改进的泛化能力（第3.3节）。</p>
+<p>（3）我们开发了一种新的方法来自动创建对抗性示例。 这是应用于SDBN的此类首次攻击（第4节）</p>
+<p>（4）我们将我们的方法应用于DNN和SDBN，并评估其不可感知性和鲁棒性（第5节）。</p>
+<p>由于人眼对低方差区域中的像素的修改更敏感，因此，为了尽可能地保持不可感知性，最好对高方差区域中的像素进行修改。</p>
+<h1 id="随机噪声应用于SDBN"><a href="#随机噪声应用于SDBN" class="headerlink" title="随机噪声应用于SDBN"></a>随机噪声应用于SDBN</h1><h2 id="随机噪声添加到输入对SDBN精度的影响"><a href="#随机噪声添加到输入对SDBN精度的影响" class="headerlink" title="随机噪声添加到输入对SDBN精度的影响"></a>随机噪声添加到输入对SDBN精度的影响</h2><p>针对三种不同的图像组合测试了针对不同噪声大小的SDBN的精度：</p>
+<ul>
+<li><p>所有测试图像。</p>
+<ul>
+<li>SDBN的精度会随着噪声幅度的增加而降低</li>
+<li>在正态分布随机噪声的情况下更明显。 </li>
+</ul>
+</li>
+<li><p>所有训练图像。（有用）</p>
+<ul>
+<li>相反，对于少量噪声δ=0.02，精确度增加。-&gt;实际上，在训练样本中加入噪声可以提高神经网络的泛化能力。</li>
+<li>但是，如果噪声等于或大于0.1，则精度会显著下降-》这种行为意味着SDBN正在学习噪声而不是有用的信息，因此无法进行分类。</li>
+</ul>
+</li>
+<li>同时添加到训练和测试图像<ul>
+<li>对于低噪声值（主要是在 均匀噪声情况）的精度与基线相似或更高; </li>
+<li>对于大于0.1的噪声量级（对于应用正态噪声的情况，更精确地为0.08），与仅对训练图像施加噪声的情况相比，精度降低的幅度更大。</li>
+</ul>
+</li>
+</ul>
+<h2 id="将噪声应用于像素的受限窗口"><a href="#将噪声应用于像素的受限窗口" class="headerlink" title="将噪声应用于像素的受限窗口"></a>将噪声应用于像素的受限窗口</h2><p>将正态分布的随机噪声添加到测试图像像素的受限窗口中。 考虑一个4x5像素的矩形，我们分析了两种情况：</p>
+<ul>
+<li>噪点将应用于图像左上角的20个像素。-》由于噪声只会影响无关的像素，因此精度几乎保持不变。</li>
+<li>噪声被应用到图像中间的20个像素。-〉精度会显着降低），这是因为代表手写数字（因此对于分类很重要）的一些白色像素会受到噪声的影响。</li>
+</ul>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ul>
+<li>正态噪声攻击性强于均匀噪声</li>
+<li>将少量噪声应用于训练图像，有助于SDBN的泛化。</li>
+<li>当将噪声应用于受限的像素窗口时，当窗口位于于分类相关的重要位置时，干扰会更有效。</li>
+</ul>
+<h1 id="生成攻击样本的新方法"><a href="#生成攻击样本的新方法" class="headerlink" title="生成攻击样本的新方法"></a>生成攻击样本的新方法</h1><h2 id="概念（有意思）"><a href="#概念（有意思）" class="headerlink" title="概念（有意思）"></a>概念（有意思）</h2><h3 id="不可感知性（imperceptibility）"><a href="#不可感知性（imperceptibility）" class="headerlink" title="不可感知性（imperceptibility）"></a>不可感知性（imperceptibility）</h3><ul>
+<li><p>确保人类不会注意到的干扰</p>
+</li>
+<li><p>考虑像素x的面积A = N·N，并按照公式计算像素$x_i$的标准偏差（SD）</p>
+<ul>
+<li><script type="math/tex; mode=display">
+S D\left(x_{i}\right)=\sqrt{\frac{x_{k} \epsilon J}{A}\left(x_{k}-\mu\right)^{2}}</script></li>
+<li><p>μ是属于N·N区域的像素的平均值，J表示构成该区域的一组像素，k是相对于该区域的所有这些像素的索引。 </p>
+</li>
+<li><p>如果像素具有<strong>较高的标准偏差</strong>，则意味着<strong>添加到该像素的干扰不容易被人眼察觉</strong>。</p>
+</li>
+</ul>
+</li>
+<li><p>衡量区域D中添加干扰的大小：攻击样本$X_∗$和原始$X$的距离（D）</p>
+<ul>
+<li><script type="math/tex; mode=display">
+D\left(X^{*}, X\right)=\sum_{i=1}^{A} \frac{\delta_{i}}{S D\left(x_{i}\right)}</script></li>
+<li><p>人眼所能承受的最大干扰可以与距离的值相关联， $D_{max}$</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="健壮性（robustness）"><a href="#健壮性（robustness）" class="headerlink" title="健壮性（robustness）"></a>健壮性（robustness）</h3><ul>
+<li><p>许多对抗性攻击方法用于最大化目标类别的概率，以缓解图像的分类器错误分类。 这种方法的主要问题是它们没有考虑等式中定义的类别概率之间的相对差异。</p>
+</li>
+<li><p>在进行图像变换之后，对概率的最小修改可能会使攻击无效。</p>
+</li>
+<li><p>为了提高鲁棒性，期望增加目标类别的概率与其他类别的最高概率之间的差。 换句话说，使间隙函数最大化。间隙函数如下：</p>
+</li>
+<li><script type="math/tex; mode=display">
+\operatorname{Gap}\left(X^{*}\right)=P(\text { targetclass })-\max \{P(\text {otherclasses})\}</script></li>
+</ul>
+<h2 id="攻击样本的生成方式（新的）"><a href="#攻击样本的生成方式（新的）" class="headerlink" title="攻击样本的生成方式（新的）"></a>攻击样本的生成方式（新的）</h2><p>黑盒+贪心</p>
+<ul>
+<li><p>特点：对图像的某些像素执行攻击，从而无需了解网络的洞察力。 </p>
+</li>
+<li><p>目的：迭代使间隙函数最大化，从而使攻击更加鲁棒；同时将样本之间的距离保持在所需阈值以下，以保持不被察觉。</p>
+</li>
+</ul>
+<p>给定使得人眼无法检测到最大扰动允许距离$D_{max}$，该问题可以表示为等式</p>
+<script type="math/tex; mode=display">
+\arg \max _{X^{*}} \operatorname{Gap}\left(X^{*}\right) | D\left(X^{*}, X\right) \leq D_{\max }</script><p><img src="/2020/02/04/脉冲深层信任网络容易受到对抗性例子的攻击吗/methodology.png" alt></p>
+<p>我们选择某个值N，该值对应于N·N个像素的区域A，对其中的M个像素子集执行攻击。</p>
+<ul>
+<li>流程：</li>
+</ul>
+<ol>
+<li>为选定的N·N个像素计算了标准偏差</li>
+<li>计算间隙函数Gap，即目标类别的概率与最大概率的其他类别之间的差。</li>
+<li><p>算法决定是对像素施加正噪声还是负噪声</p>
+<ul>
+<li>我们为每个像素计算两个参数Gap +（X ∗）和Gap-（X ∗）.Gap +（X ∗）是通过向单个像素加上一个扰动单位而计算出的间隙函数的值，反之。</li>
+</ul>
+</li>
+<li><p>根据这些值与间隙函数之间的差异，并同时考虑标准偏差，我们计算出变化优先级。</p>
+<ul>
+<li>如，如果Gap-（X ∗）大于Gap +（X ∗），则对于该像素，减去噪声将比将其添加到像素更有效。</li>
+</ul>
+</li>
+<li>将变化优先级VariationPriority排序，并为优先级最高的M个像素加入干扰。</li>
+</ol>
+<p>该算法通过将原始输入图像替换为创建的对抗图像来开始下一次迭代。当原始示例与对抗示例之间的距离超过最大感知距离时，迭代将终止。</p>
+<p><img src="/2020/02/04/脉冲深层信任网络容易受到对抗性例子的攻击吗/Algorithm.png" alt></p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/攻击对抗/" rel="tag"># 攻击对抗</a>
+            
+              <a href="/tags/脉冲神经网络/" rel="tag"># 脉冲神经网络</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/02/03/探索具有峰值兼容梯度的脉冲神经网络的对抗攻击/" rel="next" title="探索具有峰值兼容梯度的脉冲神经网络的对抗攻击（学习笔记）">
+                  <i class="fa fa-chevron-left"></i> 探索具有峰值兼容梯度的脉冲神经网络的对抗攻击（学习笔记）
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2020/02/21/对脉冲神经网络的攻击对抗论文的概括总结/" rel="prev" title="对脉冲神经网络的攻击对抗论文的概括总结">
+                  对脉冲神经网络的攻击对抗论文的概括总结 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="comments"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.jpg"
+      alt="Gulico">
+  <p class="site-author-name" itemprop="name">Gulico</p>
+  <div class="site-description motion-element" itemprop="description">I`ll spend forever wondering if you knew</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/gulico" title="GitHub &rarr; https://github.com/gulico" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:wxy_official@foxmail.com" title="E-Mail &rarr; mailto:wxy_official@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="http://weibo.com/5915498708/profile" title="Weibo &rarr; http://weibo.com/5915498708/profile" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#贡献："><span class="nav-number">1.</span> <span class="nav-text">贡献：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#随机噪声应用于SDBN"><span class="nav-number">2.</span> <span class="nav-text">随机噪声应用于SDBN</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#随机噪声添加到输入对SDBN精度的影响"><span class="nav-number">2.1.</span> <span class="nav-text">随机噪声添加到输入对SDBN精度的影响</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#将噪声应用于像素的受限窗口"><span class="nav-number">2.2.</span> <span class="nav-text">将噪声应用于像素的受限窗口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结论"><span class="nav-number">2.3.</span> <span class="nav-text">结论</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#生成攻击样本的新方法"><span class="nav-number">3.</span> <span class="nav-text">生成攻击样本的新方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念（有意思）"><span class="nav-number">3.1.</span> <span class="nav-text">概念（有意思）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#不可感知性（imperceptibility）"><span class="nav-number">3.1.1.</span> <span class="nav-text">不可感知性（imperceptibility）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#健壮性（robustness）"><span class="nav-number">3.1.2.</span> <span class="nav-text">健壮性（robustness）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#攻击样本的生成方式（新的）"><span class="nav-number">3.2.</span> <span class="nav-text">攻击样本的生成方式（新的）</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gulico</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.3.0</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+
+    
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.3.0"></script>
+  <script src="/js/motion.js?v=7.3.0"></script>
+
+
+  <script src="/js/schemes/muse.js?v=7.3.0"></script>
+
+
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', function() {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+  
+
+  
+
+  
+
+
+  
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
+    
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', function() {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'tUixx2MIs06BcUS55LA7XdJX-gzGzoHsz',
+    appKey: 'RrIrslLlxOBS5B44YcCIC0Oh',
+    placeholder: '小主有什么要问的嘛～',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

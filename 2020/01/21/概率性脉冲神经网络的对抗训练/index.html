@@ -55,22 +55,22 @@
   };
 </script>
 
-  <meta name="description" content="在本文中，首次研究了在白盒对抗攻击下通过ML（Maximum Likelihood）训练的SNN的敏感性，并提出了一种可靠的训练机制，该机制被证明可以增强白盒攻击下SNN的性能。具体来说，作者研究两层SNN，并考虑频率和时间编码，以及速率和第一峰值解码。 结果阐明了在不同编码和解码方案下，SNN对对抗示例的敏感性以及鲁棒训练方法的有效性。">
+  <meta name="description" content="Bagheri, A., Simeone, O., &amp;amp; Rajendran, B. (2018). Adversarial Training for Probabilistic Spiking Neural Networks. IEEE Workshop on Signal Processing Advances in Wireless Communications, SPAWC, 201">
 <meta name="keywords" content="攻击对抗,脉冲神经网络">
 <meta property="og:type" content="article">
-<meta property="og:title" content="概率性脉冲神经网络的对抗训练">
-<meta property="og:url" content="https://gulico.github.io/2020/07/20/概率性脉冲神经网络的对抗训练/index.html">
+<meta property="og:title" content="概率性脉冲神经网络的对抗训练（学习笔记）">
+<meta property="og:url" content="https://gulico.github.io/2020/01/21/概率性脉冲神经网络的对抗训练/index.html">
 <meta property="og:site_name" content="Gulico">
-<meta property="og:description" content="在本文中，首次研究了在白盒对抗攻击下通过ML（Maximum Likelihood）训练的SNN的敏感性，并提出了一种可靠的训练机制，该机制被证明可以增强白盒攻击下SNN的性能。具体来说，作者研究两层SNN，并考虑频率和时间编码，以及速率和第一峰值解码。 结果阐明了在不同编码和解码方案下，SNN对对抗示例的敏感性以及鲁棒训练方法的有效性。">
+<meta property="og:description" content="Bagheri, A., Simeone, O., &amp;amp; Rajendran, B. (2018). Adversarial Training for Probabilistic Spiking Neural Networks. IEEE Workshop on Signal Processing Advances in Wireless Communications, SPAWC, 201">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://gulico.github.io/2020/07/20/概率性脉冲神经网络的对抗训练/Two-layer%20SNN%20for%20supervised%20learning.png">
-<meta property="og:image" content="https://gulico.github.io/2020/07/20/概率性脉冲神经网络的对抗训练/Greedy%20Design.png">
-<meta property="og:updated_time" content="2020-07-20T03:33:00.952Z">
+<meta property="og:image" content="https://gulico.github.io/2020/01/21/概率性脉冲神经网络的对抗训练/Two-layer%20SNN%20for%20supervised%20learning.png">
+<meta property="og:image" content="https://gulico.github.io/2020/01/21/概率性脉冲神经网络的对抗训练/Greedy%20Design.png">
+<meta property="og:updated_time" content="2020-07-20T06:44:03.556Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="概率性脉冲神经网络的对抗训练">
-<meta name="twitter:description" content="在本文中，首次研究了在白盒对抗攻击下通过ML（Maximum Likelihood）训练的SNN的敏感性，并提出了一种可靠的训练机制，该机制被证明可以增强白盒攻击下SNN的性能。具体来说，作者研究两层SNN，并考虑频率和时间编码，以及速率和第一峰值解码。 结果阐明了在不同编码和解码方案下，SNN对对抗示例的敏感性以及鲁棒训练方法的有效性。">
-<meta name="twitter:image" content="https://gulico.github.io/2020/07/20/概率性脉冲神经网络的对抗训练/Two-layer%20SNN%20for%20supervised%20learning.png">
-  <link rel="canonical" href="https://gulico.github.io/2020/07/20/概率性脉冲神经网络的对抗训练/">
+<meta name="twitter:title" content="概率性脉冲神经网络的对抗训练（学习笔记）">
+<meta name="twitter:description" content="Bagheri, A., Simeone, O., &amp;amp; Rajendran, B. (2018). Adversarial Training for Probabilistic Spiking Neural Networks. IEEE Workshop on Signal Processing Advances in Wireless Communications, SPAWC, 201">
+<meta name="twitter:image" content="https://gulico.github.io/2020/01/21/概率性脉冲神经网络的对抗训练/Two-layer%20SNN%20for%20supervised%20learning.png">
+  <link rel="canonical" href="https://gulico.github.io/2020/01/21/概率性脉冲神经网络的对抗训练/">
 
 
 <script id="page-configurations">
@@ -84,7 +84,7 @@
   };
 </script>
 
-  <title>概率性脉冲神经网络的对抗训练 | Gulico</title>
+  <title>概率性脉冲神经网络的对抗训练（学习笔记） | Gulico</title>
   
 
 
@@ -259,7 +259,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://gulico.github.io/2020/07/20/概率性脉冲神经网络的对抗训练/">
+    <link itemprop="mainEntityOfPage" href="https://gulico.github.io/2020/01/21/概率性脉冲神经网络的对抗训练/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Gulico">
@@ -273,7 +273,7 @@
       <header class="post-header">
 
         
-          <h1 class="post-title" itemprop="name headline">概率性脉冲神经网络的对抗训练
+          <h1 class="post-title" itemprop="name headline">概率性脉冲神经网络的对抗训练（学习笔记）
 
             
           </h1>
@@ -290,11 +290,19 @@
                 
               
 
-              <time title="创建时间：2020-07-20 11:31:09 / 修改时间：11:33:00" itemprop="dateCreated datePublished" datetime="2020-07-20T11:31:09+08:00">2020-07-20</time>
+              <time title="创建时间：2020-01-21 11:31:09" itemprop="dateCreated datePublished" datetime="2020-01-21T11:31:09+08:00">2020-01-21</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-20 14:44:03" itemprop="dateModified" datetime="2020-07-20T14:44:03+08:00">2020-07-20</time>
+              </span>
             
           
             <span class="post-meta-item">
@@ -323,8 +331,8 @@
       
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/07/20/概率性脉冲神经网络的对抗训练/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/07/20/概率性脉冲神经网络的对抗训练/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/01/21/概率性脉冲神经网络的对抗训练/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/01/21/概率性脉冲神经网络的对抗训练/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -340,10 +348,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>在本文中，首次研究了在白盒对抗攻击下通过ML（Maximum Likelihood）训练的SNN的敏感性，并提出了一种可靠的训练机制，该机制被证明可以增强白盒攻击下SNN的性能。</p><p>具体来说，作者研究两层SNN，并考虑频率和时间编码，以及速率和第一峰值解码。 结果阐明了在不同编码和解码方案下，SNN对对抗示例的敏感性以及鲁棒训练方法的有效性。</p><a id="more"></a>
-
+        <p>Bagheri, A., Simeone, O., &amp; Rajendran, B. (2018). Adversarial Training for Probabilistic Spiking Neural Networks. <em>IEEE Workshop on Signal Processing Advances in Wireless Communications, SPAWC</em>, <em>2018</em>-<em>June</em>. <a href="https://doi.org/10.1109/SPAWC.2018.8446003" target="_blank" rel="noopener">https://doi.org/10.1109/SPAWC.2018.8446003</a></p><a id="more"></a>
+<p>在本文中，首次研究了在白盒对抗攻击下通过ML（Maximum Likelihood）训练的SNN的敏感性，并提出了一种可靠的训练机制，该机制被证明可以增强白盒攻击下SNN的性能。</p>
+<p>具体来说，作者研究两层SNN，并考虑频率和时间编码，以及速率和第一峰值解码。 结果阐明了在不同编码和解码方案下，SNN对对抗示例的敏感性以及鲁棒训练方法的有效性。</p>
 <h1 id="snn模型"><a href="#snn模型" class="headerlink" title="snn模型"></a>snn模型</h1><p>广义线性模型（GLM）神经元的两层SNN的体系结构。（了解即可）</p>
-<p><img src="/2020/07/20/概率性脉冲神经网络的对抗训练/Two-layer SNN for supervised learning.png" alt></p>
+<p><img src="/2020/01/21/概率性脉冲神经网络的对抗训练/Two-layer SNN for supervised learning.png" alt></p>
 <h2 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h2><ul>
 <li><p>SNN采用全连接的方式。</p>
 </li>
@@ -412,7 +421,7 @@ c^{\mathrm{LL}}=\underset{c^{\prime} \neq c}{\operatorname{argmin}} \quad L_{\bo
 <p>$C = (0，1)^{N_X T}$，用于加攻击；</p>
 <p>$C = (0，-1)^{N_X T}$表示删除攻击；</p>
 <p>$C = (0，±1)^{N_X T}$ ，用于翻转攻击。</p>
-<p><img src="/2020/07/20/概率性脉冲神经网络的对抗训练/Greedy Design.png" alt></p>
+<p><img src="/2020/01/21/概率性脉冲神经网络的对抗训练/Greedy Design.png" alt></p>
 <h2 id="复杂度优化"><a href="#复杂度优化" class="headerlink" title="复杂度优化"></a>复杂度优化</h2><p>精确解决方案需要遍历$N<em>{X} T$个样本的所有可能干扰，复杂度过高。如算法1所述，在$⌊\epsilon N</em>{X} T⌋$次迭代中的每一次迭代，该方法都会根据攻击类型寻找添加，删除或翻转的最佳脉冲。 </p>
 <p>作者通过仅搜索所有输入神经元的前$T_A$个样本，降低了复杂性。</p>
 <h1 id="强化训练"><a href="#强化训练" class="headerlink" title="强化训练"></a>强化训练</h1><p>在基于SGD的训练阶段中，每个训练示例$(x，c)$被替换为从算法1获得的当前迭代θ的对抗示例$x_{adv}$。 </p>
@@ -468,8 +477,8 @@ c^{\mathrm{LL}}=\underset{c^{\prime} \neq c}{\operatorname{argmin}} \quad L_{\bo
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2020/07/20/脉冲神经网络的攻击对抗健壮性综合分析/" rel="next" title="脉冲神经网络的攻击对抗健壮性综合分析">
-                  <i class="fa fa-chevron-left"></i> 脉冲神经网络的攻击对抗健壮性综合分析
+                <a href="/2020/01/20/脉冲神经网络的攻击对抗健壮性综合分析/" rel="next" title="脉冲神经网络的攻击对抗健壮性综合分析（学习笔记）">
+                  <i class="fa fa-chevron-left"></i> 脉冲神经网络的攻击对抗健壮性综合分析（学习笔记）
                 </a>
               
             </div>
@@ -477,6 +486,10 @@ c^{\mathrm{LL}}=\underset{c^{\prime} \neq c}{\operatorname{argmin}} \quad L_{\bo
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2020/02/03/探索具有峰值兼容梯度的脉冲神经网络的对抗攻击/" rel="prev" title="探索具有峰值兼容梯度的脉冲神经网络的对抗攻击（学习笔记）">
+                  探索具有峰值兼容梯度的脉冲神经网络的对抗攻击（学习笔记） <i class="fa fa-chevron-right"></i>
+                </a>
               
             </div>
           </div>
@@ -536,7 +549,7 @@ c^{\mathrm{LL}}=\underset{c^{\prime} \neq c}{\operatorname{argmin}} \quad L_{\bo
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

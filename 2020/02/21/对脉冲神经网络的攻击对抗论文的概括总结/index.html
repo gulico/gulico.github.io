@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    save_scroll: false,
+    copycode: {"enable":true,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="主要问题：攻击样本，即向原始样本中添加一些人眼无法察觉的噪声，这样的噪声不会影响人类的识别，但是却很容易愚弄DNN，使其作出与正确答案完全不同的判定。 目前snn在对抗攻击方面的研究还比较少   常用方法有基于梯度的/基于内容的 在snn中又可以分为基于原始数据的/基于脉冲的    《A Comprehensive Analysis on Adversarial Robustness of Sp">
+<meta name="keywords" content="攻击对抗,脉冲神经网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="对脉冲神经网络的攻击对抗论文的概括总结">
+<meta property="og:url" content="https://gulico.github.io/2020/02/21/对脉冲神经网络的攻击对抗论文的概括总结/index.html">
+<meta property="og:site_name" content="Gulico">
+<meta property="og:description" content="主要问题：攻击样本，即向原始样本中添加一些人眼无法察觉的噪声，这样的噪声不会影响人类的识别，但是却很容易愚弄DNN，使其作出与正确答案完全不同的判定。 目前snn在对抗攻击方面的研究还比较少   常用方法有基于梯度的/基于内容的 在snn中又可以分为基于原始数据的/基于脉冲的    《A Comprehensive Analysis on Adversarial Robustness of Sp">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-07-20T06:40:52.207Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="对脉冲神经网络的攻击对抗论文的概括总结">
+<meta name="twitter:description" content="主要问题：攻击样本，即向原始样本中添加一些人眼无法察觉的噪声，这样的噪声不会影响人类的识别，但是却很容易愚弄DNN，使其作出与正确答案完全不同的判定。 目前snn在对抗攻击方面的研究还比较少   常用方法有基于梯度的/基于内容的 在snn中又可以分为基于原始数据的/基于脉冲的    《A Comprehensive Analysis on Adversarial Robustness of Sp">
+  <link rel="canonical" href="https://gulico.github.io/2020/02/21/对脉冲神经网络的攻击对抗论文的概括总结/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>对脉冲神经网络的攻击对抗论文的概括总结 | Gulico</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  <div class="container sidebar-position-left">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Gulico</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-guestbook">
+      
+    
+
+    <a href="/guestbook" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>留言</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+    
+
+</nav>
+  <div class="site-search">
+    
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content page-post-detail">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://gulico.github.io/2020/02/21/对脉冲神经网络的攻击对抗论文的概括总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gulico">
+      <meta itemprop="description" content="I`ll spend forever wondering if you knew">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gulico">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">对脉冲神经网络的攻击对抗论文的概括总结
+
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-02-21 14:37:29" itemprop="dateCreated datePublished" datetime="2020-02-21T14:37:29+08:00">2020-02-21</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-20 14:40:52" itemprop="dateModified" datetime="2020-07-20T14:40:52+08:00">2020-07-20</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/攻击对抗/" itemprop="url" rel="index"><span itemprop="name">攻击对抗</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/02/21/对脉冲神经网络的攻击对抗论文的概括总结/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/02/21/对脉冲神经网络的攻击对抗论文的概括总结/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li>主要问题：攻击样本，即向原始样本中添加一些人眼无法察觉的噪声，这样的噪声不会影响人类的识别，但是却很容易愚弄DNN，使其作出与正确答案完全不同的判定。<ul>
+<li>目前snn在对抗攻击方面的研究还比较少</li>
+</ul>
+</li>
+<li>常用方法有基于梯度的/基于内容的<ul>
+<li>在snn中又可以分为基于原始数据的/基于脉冲的</li>
+</ul>
+</li>
+</ul><ol>
+<li><p>《A Comprehensive Analysis on Adversarial Robustness of Spiking Neural Networks》arXiv:1905.02704v1 </p>
+<ul>
+<li><p>提出了一种简单的机制，可以根据SNN模型参数生成对抗性输入，而无需在脉冲域中进行任何额外non-trivial 的梯度计算。</p>
+</li>
+<li><p>算法：</p>
+<ol>
+<li><p>构建具有相同网络拓扑结构的神经网络模型ANN′，并初始化。</p>
+</li>
+<li><p>讲之前训练得到的$M_{SNN}$模型的权值覆盖ANN′。</p>
+</li>
+<li><p>干净数据集的Poisson脉冲序列生成频率编码的输入$X_{rate}$。</p>
+</li>
+<li><p>用$X_{rate}$输入ANN′模型生成FGSM攻击样本。</p>
+</li>
+</ol>
+</li>
+<li><p>总结：实际上作者提出的方法还是通过ann得到的攻击样本，没有解决snn难以获取时空梯度的问题。</p>
+</li>
+</ul>
+</li>
+<li><p>《Exploring Adversarial Attack in Spiking Neural Networks with Spike-Compatible Gradient》arXiv:2001.01587v1 [cs.NE]1 Jan 2020</p>
+<ul>
+<li>问题：<ol>
+<li>snn时空梯度难以获取</li>
+<li>梯度不相容</li>
+<li>梯度消失</li>
+</ol>
+</li>
+<li><p>解决方法</p>
+<ol>
+<li>backpropagation through time (BPTT)-inspired learning algorithms 应用于SNN</li>
+<li><p>梯度脉冲（G2S）转换器</p>
+<ul>
+<li><p>概率采样</p>
+<ul>
+<li><p>首先将梯度归一化为[0，1]。 </p>
+</li>
+<li><p>然后，对归一化的梯度图进行采样，以生成具有相同形状的二进制掩码，</p>
+</li>
+</ul>
+</li>
+<li><p>符号提取——生成一个三元梯度图</p>
+<ul>
+<li>三元梯度图：每个元素都位于{−1，0，1}中，在累加到二进制值为{0，1}的脉冲输入后，可以保持脉冲格式。 </li>
+</ul>
+</li>
+<li><p>溢出感知转换</p>
+<ul>
+<li>虽然上述$\delta s_{k}^{\prime \prime}$可以是三元的，但它不能保证由输入梯度累积产生的攻击样本仍然局限于{0，1}。</li>
+<li>流感知梯度变换来限制最终对抗例子的范围</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>梯度触发器（GT）</p>
+<ul>
+<li><p>元素选择</p>
+<ul>
+<li>梯度初始化，将所有元素设置为γ，它控制GT后非零梯度的数量。</li>
+<li>之前的概率抽样仍然适用于生成掩码$\delta_{mask}$。</li>
+</ul>
+</li>
+<li><p>梯度构造</p>
+<ul>
+<li>为了保持攻击样本的脉冲格式，我们只需翻转选定区域中脉冲输入的状态。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>总结：目前目标是实现stdp上的黑盒攻击，最基本的stdp是无监督学习算法，理论上是没有反向传播的，也就是说不能使用基于梯度计算。那本篇文章的大方向其实没有太大参考价值。但是我认为梯度脉冲转换器和梯度触发器的设计细节上，比如概率采样/符号提取/溢出感知转换也许在stdp处理原始数据转换为脉冲的过程中可以参考。</li>
+</ul>
+</li>
+<li><p>《Adversarial Training for Probabilistic Spiking Neural Networks》arXiv:1802.08567v2 [stat.ML] 26 Feb 2018</p>
+<ul>
+<li><p>首次研究了在白盒对抗攻击下通过ML（Maximum Likelihood）训练的SNN的敏感性，并提出了一种可靠的训练机制，该机制被证明可以增强白盒攻击下SNN的性能。</p>
+</li>
+<li><p>算法：</p>
+<ul>
+<li><p><strong>扰动类型</strong>：消除攻击；增加攻击；翻转(Flip)攻击</p>
+</li>
+<li><p><strong>扰动类型的选择</strong></p>
+<ol>
+<li><p>找到在给定模型θ下可能性最小的类别c^LL:</p>
+</li>
+<li><p>选择干扰类型，使得攻击强度最大，也就是判定为目标类别$c^{LL}$的可能性最大。</p>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>总结：该算法是在脉冲上加入扰动，且不是基于梯度的，如果要应用于stdp应该只需把扰动类型选择过程中计算分类概率的函数改成对应的概率就可以。虽然文章写的是白盒攻击，但是文章的最后表示可以迁移到黑盒攻击。</p>
+</li>
+</ul>
+</li>
+<li><p>《SNN under Attack: are Spiking Deep Belief Networks vulnerable to Adversarial Examples? 》arXiv:1902.01147v1 [cs.LG]4 Feb 2019</p>
+<ul>
+<li><p>开发了一种黑盒攻击方法，可通过贪婪算法自动生成无法感知且强大的攻击样本，这是SNN的首创。</p>
+</li>
+<li><p>概念：</p>
+<pre><code> 1. 不可感知性：确保人类不会注意到的干扰
+ - 如果像素具有**较高的标准偏差**，则意味着**添加到该像素的干扰不容易被人眼察觉**。
+    2. 健壮性：先前的算法只考虑目标类别概率最大，而未考虑目标类别与其他类别的概率差，即应该增加目标类别的概率与其他类别的最高概率之间的差。（间隙函数）
+</code></pre></li>
+<li><p>算法</p>
+<ul>
+<li><p>目标：迭代使间隙函数最大化，从而使攻击更加鲁棒；同时将样本之间的距离保持在所需阈值以下，以保持不被察觉。</p>
+</li>
+<li><p>步骤：</p>
+<ol>
+<li>为选定的N·N个像素计算了标准偏差</li>
+<li>计算间隙函数Gap，即目标类别的概率与最大概率的其他类别之间的差。</li>
+<li><p>算法决定是对像素施加正噪声还是负噪声</p>
+</li>
+<li><p>根据这些值与间隙函数之间的差异，并同时考虑标准偏差，我们计算出变化优先级。</p>
+</li>
+<li>将变化优先级VariationPriority排序，并为优先级最高的M个像素加入干扰。</li>
+</ol>
+<p>该算法通过将原始输入图像替换为创建的对抗图像来开始下一次迭代。当原始示例与对抗示例之间的距离超过最大感知距离时，迭代将终止。</p>
+</li>
+</ul>
+</li>
+<li><p>总结：4中否定和3中提出的健壮性的衡量方法，提出了新的健壮性的衡量方式，即间隙函数。3中是修改脉冲，而4是修改原是图像的。</p>
+</li>
+</ul>
+</li>
+</ol><a id="more"></a>
+
+<ul>
+<li><p>总结：1、2都是利用基于梯度的，但是目前目标是实现stdp上的黑盒攻击，最基本的stdp是无监督学习算法，理论上是没有反向传播的，也就是说不能基于梯度计算。接下来的研究我认为应该关注一些基于内容的或者其他非基于梯度的算法。</p>
+</li>
+<li><p>| <strong>Article</strong>                      | 是否基于梯度 | 白盒 | 黑盒 | 修改像素or脉冲 |<br>| ———————————————— | —————— | —— | —— | ——————— |<br>| [1] Saima Sharmin et al,2019     | Y            | Y    | Y    | Pixel          |<br>| [2] Ling Liang et al,2020        | Y            | Y    | N    | both           |<br>| [3] Alireza Bagheri et al,2018   | N            | Y    | N    | Spiking        |<br>| [4] Alberto Marchisio et al,2019 | N            | N    | Y    | Pixel          |</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/攻击对抗/" rel="tag"># 攻击对抗</a>
+            
+              <a href="/tags/脉冲神经网络/" rel="tag"># 脉冲神经网络</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/02/04/脉冲深层信任网络容易受到对抗性例子的攻击吗/" rel="next" title="脉冲深层信任网络容易受到对抗性例子的攻击吗（学习笔记）">
+                  <i class="fa fa-chevron-left"></i> 脉冲深层信任网络容易受到对抗性例子的攻击吗（学习笔记）
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2020/03/06/One-Pixel-Attack/" rel="prev" title="One Pixel Attack（学习笔记）">
+                  One Pixel Attack（学习笔记） <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="comments"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.jpg"
+      alt="Gulico">
+  <p class="site-author-name" itemprop="name">Gulico</p>
+  <div class="site-description motion-element" itemprop="description">I`ll spend forever wondering if you knew</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/gulico" title="GitHub &rarr; https://github.com/gulico" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:wxy_official@foxmail.com" title="E-Mail &rarr; mailto:wxy_official@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="http://weibo.com/5915498708/profile" title="Weibo &rarr; http://weibo.com/5915498708/profile" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gulico</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.3.0</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+
+    
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.3.0"></script>
+  <script src="/js/motion.js?v=7.3.0"></script>
+
+
+  <script src="/js/schemes/muse.js?v=7.3.0"></script>
+
+
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', function() {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+  
+
+  
+
+  
+
+
+  
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
+    
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', function() {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'tUixx2MIs06BcUS55LA7XdJX-gzGzoHsz',
+    appKey: 'RrIrslLlxOBS5B44YcCIC0Oh',
+    placeholder: '小主有什么要问的嘛～',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

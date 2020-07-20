@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    save_scroll: false,
+    copycode: {"enable":true,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="Sharmin, S., Panda, P., Sarwar, S. S., Lee, C., Ponghiran, W., &amp;amp; Roy, K. (2019). A Comprehensive Analysis on Adversarial Robustness of Spiking Neural Networks. Proceedings of the International Joi">
+<meta name="keywords" content="攻击对抗,脉冲神经网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="脉冲神经网络的攻击对抗健壮性综合分析（学习笔记）">
+<meta property="og:url" content="https://gulico.github.io/2020/01/20/脉冲神经网络的攻击对抗健壮性综合分析/index.html">
+<meta property="og:site_name" content="Gulico">
+<meta property="og:description" content="Sharmin, S., Panda, P., Sarwar, S. S., Lee, C., Ponghiran, W., &amp;amp; Roy, K. (2019). A Comprehensive Analysis on Adversarial Robustness of Spiking Neural Networks. Proceedings of the International Joi">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://gulico.github.io/2020/01/20/脉冲神经网络的攻击对抗健壮性综合分析/training.png">
+<meta property="og:image" content="https://gulico.github.io/2020/01/20/脉冲神经网络的攻击对抗健壮性综合分析/Adversarial_input.png">
+<meta property="og:image" content="https://gulico.github.io/2020/01/20/脉冲神经网络的攻击对抗健壮性综合分析/PARAMETERS.png">
+<meta property="og:image" content="https://gulico.github.io/2020/01/20/脉冲神经网络的攻击对抗健壮性综合分析/testing.png">
+<meta property="og:image" content="https://gulico.github.io/2020/01/20/脉冲神经网络的攻击对抗健壮性综合分析/A%20DVERSARIAL_ATTACK_COMPARISONS.png">
+<meta property="og:updated_time" content="2020-07-20T06:43:43.430Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="脉冲神经网络的攻击对抗健壮性综合分析（学习笔记）">
+<meta name="twitter:description" content="Sharmin, S., Panda, P., Sarwar, S. S., Lee, C., Ponghiran, W., &amp;amp; Roy, K. (2019). A Comprehensive Analysis on Adversarial Robustness of Spiking Neural Networks. Proceedings of the International Joi">
+<meta name="twitter:image" content="https://gulico.github.io/2020/01/20/脉冲神经网络的攻击对抗健壮性综合分析/training.png">
+  <link rel="canonical" href="https://gulico.github.io/2020/01/20/脉冲神经网络的攻击对抗健壮性综合分析/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>脉冲神经网络的攻击对抗健壮性综合分析（学习笔记） | Gulico</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  <div class="container sidebar-position-left">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Gulico</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-guestbook">
+      
+    
+
+    <a href="/guestbook" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>留言</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+    
+
+</nav>
+  <div class="site-search">
+    
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content page-post-detail">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://gulico.github.io/2020/01/20/脉冲神经网络的攻击对抗健壮性综合分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gulico">
+      <meta itemprop="description" content="I`ll spend forever wondering if you knew">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gulico">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">脉冲神经网络的攻击对抗健壮性综合分析（学习笔记）
+
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-01-20 11:16:49" itemprop="dateCreated datePublished" datetime="2020-01-20T11:16:49+08:00">2020-01-20</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-20 14:43:43" itemprop="dateModified" datetime="2020-07-20T14:43:43+08:00">2020-07-20</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/攻击对抗/" itemprop="url" rel="index"><span itemprop="name">攻击对抗</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/01/20/脉冲神经网络的攻击对抗健壮性综合分析/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/01/20/脉冲神经网络的攻击对抗健壮性综合分析/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Sharmin, S., Panda, P., Sarwar, S. S., Lee, C., Ponghiran, W., &amp; Roy, K. (2019). A Comprehensive Analysis on Adversarial Robustness of Spiking Neural Networks. <em>Proceedings of the International Joint Conference on Neural Networks</em>, <em>2019</em>-<em>July</em>. <a href="https://doi.org/10.1109/IJCNN.2019.8851732" target="_blank" rel="noopener">https://doi.org/10.1109/IJCNN.2019.8851732</a></p><a id="more"></a>
+<h1 id="贡献"><a href="#贡献" class="headerlink" title="贡献"></a>贡献</h1><ol>
+<li>目前没有文献可以生成构造snn对抗性攻击。提出了一种简单的机制，可以根据SNN模型参数生成对抗性输入，而无需在脉冲域中进行任何额外non-trivial 的梯度计算。</li>
+<li>用作者提出的方法，进行不同攻击情形下ANN和等效SNN行为的全面定量比较。<ul>
+<li>黑盒攻击（例如，当攻击者不了解目标模型的参数时），脉冲网络比基于速率的ANN更为健壮。 </li>
+<li>白盒攻击中（即，当攻击者完全了解目标模型的参数时），SNN通常会比ANN产生的精度降级更多(higher accuracy degradation)</li>
+<li>结论：用作者的方法，snn比ann抢强壮。</li>
+</ul>
+</li>
+<li>SNN的对抗性取决于训练机制。基于直接脉冲的反向传播，比基于转换的方法，显示出更好的鲁棒性。</li>
+</ol>
+<h1 id="攻击对抗基础"><a href="#攻击对抗基础" class="headerlink" title="攻击对抗基础"></a>攻击对抗基础</h1><p>文章中主要使用了3种广为人知的生成攻击对抗样本的算法。</p>
+<p>$x$      最初干净的输入</p>
+<p>$y_{true}$ 与$x$对应的标签（分类）</p>
+<p>$x^{a d v}$ 最终生成的对抗样本</p>
+<ol>
+<li><p><strong>无目标快速梯度标志算法 Non-targeted FGSM (Fast Gradient Sign Method)</strong></p>
+<script type="math/tex; mode=display">
+x^{a d v}=x+\epsilon \operatorname{sign}\left(\nabla_{x} J\left(x, y_{t r u e}\right)\right)</script><p>$\epsilon$ 一个比原始样本$x$小的多的数</p>
+<p>$J\left(x, y_{t r u e}\right)$ 模型的损失函数</p>
+<p>$\nabla_{x} J$ 损失函数相对于原始数据的梯度</p>
+</li>
+<li><p><strong>无目标随机快速梯度标志算法 Non-targeted R-FGSM (Random-step FGSM)</strong></p>
+<p>与之前的单步梯度计算相比，该方法在最初加入了一个随机的噪声$N\left(O^{d}, I^{d}\right)$</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+x^{\prime} &=x+\alpha \operatorname{sign}\left(N\left(O^{d}, I^{d}\right)\right) \\
+x^{a d v} &=x^{\prime}+(\epsilon-\alpha) \operatorname{sign}\left(\nabla_{x^{\prime}} J\left(x^{\prime}, y_{t r u e}\right)\right)
+\end{aligned}</script><p>其中，$\epsilon&gt;\alpha$。该方法用于平滑数据。</p>
+</li>
+<li><p><strong>迭代快速梯度标志算法 I-FGSM (Iterative FGSM)</strong></p>
+<p>将迭代应用于FGSM，则得到了以下算法。</p>
+<p>$步长（每次的扰动）\alpha&gt;=\epsilon/k$，其中k为迭代次数。</p>
+<p>其中无目标I-FGSM，损失函数的计算是相对于真实标签$y_{true}$ 的；</p>
+<p>而有目标I-FGSM的算是函数的计算是相对于最相近的分类$y_{ll}$ 的。</p>
+<p>$x_{N}^{a d v}$ 是迭代第N次得到的样本</p>
+<p>${Clip}_{x, \epsilon}()$ 将参数按照范围$[x-\epsilon,x+\epsilon]$逐元素裁剪到范围</p>
+<ol>
+<li><p><strong>Non-targeted I-FGSM（无目标）:</strong></p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&x_{0}^{a d v}=x\\
+&x_{N+1}^{a d v}={Clip}_{x, \epsilon}\left\{x_{N}^{a d v}+\alpha \operatorname{sign}\left(\nabla_{x} J\left(x_{N}^{a d v}, y_{t r u e}\right)\right)\right\}
+\end{aligned}</script></li>
+<li><p><strong>Targeted I-FGSM（有目标）:</strong></p>
+<script type="math/tex; mode=display">
+\begin{aligned}&x_{0}^{a d v}=x\\&x_{N+1}^{a d v}={Clip}_{x, \epsilon}\left\{x_{N}^{a d v}+\alpha \operatorname{sign}\left(\nabla_{x} J\left(x_{N}^{a d v}, y_{ll}\right)\right)\right\}\end{aligned}</script></li>
+</ol>
+</li>
+</ol>
+<h1 id="脉冲神经网络基础"><a href="#脉冲神经网络基础" class="headerlink" title="脉冲神经网络基础"></a>脉冲神经网络基础</h1><p>脉冲神经网络SNN使用符合生物特性的IF或者LIF神经元代替人工神经网络中的激活函数（如，Rectiﬁed Linear Unit）。LIF模型如下：</p>
+<script type="math/tex; mode=display">
+\tau \frac{d V_{\operatorname{mem}}}{d t}=-V_{\operatorname{mem}}+w \theta\left(t-t_{k}\right)</script><p>$V_{mem}$ 是膜电位</p>
+<p>τ是$V_{mem}$ 衰减的时间常数</p>
+<p>w是突触权重</p>
+<p>$\theta\left(t-t_{k}\right)$代表时刻t_k​的脉冲</p>
+<ol>
+<li><p><strong>基于ANN转化的SNN(SNN-I)</strong></p>
+<p>这里将IF神经元等同于ANN中的激活函数ReLU。</p>
+<p>调整突触权重（“权重归一化”）或神经元阈值（“阈值平衡”），以实现从ANN到SNN的无损转换。与ANN相比，以这种方式训练的SNN的准确性很高。</p>
+</li>
+<li><p><strong>基于直接脉冲训练的SNN(SNN-II)</strong></p>
+<p>这里使用LIF神经元作为基本模块。</p>
+<p>前向传播中，将从输入像素生成的泊松分布的脉冲序列送到网络。 如果超过阈值，则在时间t，神经元输入处的累积加权没冲将触发输出没冲。 每一层的神经元都会根据从上一层收到的输入尖峰进行此过程。</p>
+<p>为了在脉冲域中进行反向传播，我们需要神经元的微分传递函数。 为此，根据以下方程式，通过低通滤波脉冲序列来确定脉冲神经元的激活。</p>
+<script type="math/tex; mode=display">
+\text {Activation, } a(t)=\frac{1}{T} \sum_{k=1}^{t} \exp \left(-\frac{t-t_{k}}{\tau}\right)</script><p>时间常数τ决定了神经元激活的衰减率。 T是总时间。 $t_k$是第k个尖峰的时刻。</p>
+<p>相对于权重的误差梯度需要计算神经元激活A相对于神经元的净输入的导数，这近似于以下方程：</p>
+<script type="math/tex; mode=display">
+\frac{\delta a}{\delta n e t}=\frac{1}{V_{t h}}\left(1+\frac{\delta a}{\delta t}\right)</script><p>其中，$V_{th}$代表阈值。net是神经元输入峰值的累积加权和，t是时刻。</p>
+</li>
+</ol>
+<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><p>数据集：CIFAR-10</p>
+<p>对照网络：VGG-9人工神经网络（ANN）、脉冲神经网络（SNN）</p>
+<h2 id="训练："><a href="#训练：" class="headerlink" title="训练："></a>训练：</h2><p><img src="/2020/01/20/脉冲神经网络的攻击对抗健壮性综合分析/training.png" alt></p>
+<p>总共得到6个网络：</p>
+<ul>
+<li><p>对ANN的训练：</p>
+<ul>
+<li>VGG-9ann的训练采用200个阶段；</li>
+<li>初始学习率为0.09，为了保证训练过程中损失函数的逐渐减小，在81和122次迭代中（也称为学习率退火）减少10倍。</li>
+<li>最终得到两个相同结构但是初始化不同的网络$M<em>{ANN}和M</em>{ANN}^x$</li>
+</ul>
+</li>
+<li><p>对SNN的训练：</p>
+<ul>
+<li><p>基于转化的SNN-I</p>
+<ul>
+<li>最终得到两个相同结构但是初始化不同的网络$M<em>{SNN-I}和M</em>{SNN-I}^x$</li>
+</ul>
+</li>
+<li><p>基于脉冲训练的SNN-II</p>
+<p>正向传播期间的总时间步数为70。训练分125个阶段进行，其中在第70和100个阶段降低了学习率。</p>
+<ul>
+<li>最终得到两个相同结构但是初始化不同的网络$M<em>{SNN-II}和M</em>{SNN-II}^x$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="对抗样本的生成"><a href="#对抗样本的生成" class="headerlink" title="对抗样本的生成"></a>对抗样本的生成</h2><p><img src="/2020/01/20/脉冲神经网络的攻击对抗健壮性综合分析/Adversarial_input.png" alt></p>
+<ul>
+<li><strong>ANN：</strong></li>
+</ul>
+<p>使用四种不同的方法从训练模型生成对抗性输入：</p>
+<p>（i）无目标FGSM，</p>
+<p>（ii）无目标R-FGSM，</p>
+<p>（iii）无目标I-FGSM和</p>
+<p>（iv）有目标I-FGSM。</p>
+<p>扰动$\epsilon$ 取 8/255, 16/255, 32/255 和 64/255</p>
+<p>迭代FGSM中，取2步、5步和7步进行实验。</p>
+<p>下图为试验参数：</p>
+<p><img src="/2020/01/20/脉冲神经网络的攻击对抗健壮性综合分析/PARAMETERS.png" alt></p>
+<ul>
+<li><p><strong>用SNN生成对抗样本</strong>（！！！这里是本文的贡献）</p>
+<p>这里作者提出一个简单的框架，用于snn生成对抗样本：</p>
+<ol>
+<li>对具有相同网络拓扑结构的神经网络模型NN′进行随机初始化。SNN模型是独立训练的（$M_{SNN}$）。</li>
+<li>映射神经网络权值矩阵，并用$M_{SNN}$的学习权值覆盖。</li>
+<li>干净数据集的Poisson脉冲序列生成频率编码的输入$X_{rate}$。</li>
+<li>采用$X_{rate}$和NN模型生成FGSM对抗性输入</li>
+</ol>
+<script type="math/tex; mode=display">
+X_{a d v}^{i}=A N N A d v\left(X_{r a t e}^{i}, N N^{\prime}, \epsilon\right)</script></li>
+</ul>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>对抗性输入通过网络的前向函数，并与真实标签进行比较，计算出相应的对抗性测试精度和损失。</p>
+<p><img src="/2020/01/20/脉冲神经网络的攻击对抗健壮性综合分析/testing.png" alt></p>
+<p><img src="/2020/01/20/脉冲神经网络的攻击对抗健壮性综合分析/A DVERSARIAL_ATTACK_COMPARISONS.png" alt></p>
+<p>上图为测试的模型和输入对抗样本源的所有组合。</p>
+<ul>
+<li>白盒：每个目标模型（$M<em>{ANN}$、$M</em>{SNN-I}$和$M_{SNN-II}$）都受到各自目标网络生成的对抗输入的攻击。</li>
+<li>SNN-I生成的对抗样本的黑盒攻击：所有目标模型都受到来自单个SNN-I模型$M_{SNN-I^x}$ 的输入的攻击。</li>
+<li>SNN-II生成的对抗样本的黑盒攻击：所有目标模型都受到来自单个SNN-II模型$M_{SNN-II^x}$ 的输入的攻击。</li>
+<li>ANN生成的对抗样本的黑盒攻击：所有目标模型都受到来自单个ANN模型$M_{ANN^x}$ 的输入的攻击。</li>
+</ul>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ol>
+<li><p>ANN与SNN</p>
+<ul>
+<li>SNN比ANN具有更强的对抗攻击能力，导致SNN在白盒场景中比ANN具有更高的准确性损失。</li>
+<li>由于snn固有的随机时间动力学特性，它在黑箱环境下比ann具有更强的鲁棒性。</li>
+</ul>
+</li>
+<li><p>SNN的鲁棒性很大程度上取决于相应的训练机制——通过基于脉冲的反向传播训练的SNN比在ANN到SNN转换规则所获得的SNN更具对抗性</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/攻击对抗/" rel="tag"># 攻击对抗</a>
+            
+              <a href="/tags/脉冲神经网络/" rel="tag"># 脉冲神经网络</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/11/21/以生物可塑性为核心的类脑脉冲神经网络学习笔记/" rel="next" title="以生物可塑性为核心的类脑脉冲神经网络学习笔记">
+                  <i class="fa fa-chevron-left"></i> 以生物可塑性为核心的类脑脉冲神经网络学习笔记
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2020/01/21/概率性脉冲神经网络的对抗训练/" rel="prev" title="概率性脉冲神经网络的对抗训练（学习笔记）">
+                  概率性脉冲神经网络的对抗训练（学习笔记） <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="comments"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.jpg"
+      alt="Gulico">
+  <p class="site-author-name" itemprop="name">Gulico</p>
+  <div class="site-description motion-element" itemprop="description">I`ll spend forever wondering if you knew</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/gulico" title="GitHub &rarr; https://github.com/gulico" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:wxy_official@foxmail.com" title="E-Mail &rarr; mailto:wxy_official@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="http://weibo.com/5915498708/profile" title="Weibo &rarr; http://weibo.com/5915498708/profile" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#贡献"><span class="nav-number">1.</span> <span class="nav-text">贡献</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#攻击对抗基础"><span class="nav-number">2.</span> <span class="nav-text">攻击对抗基础</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#脉冲神经网络基础"><span class="nav-number">3.</span> <span class="nav-text">脉冲神经网络基础</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实验"><span class="nav-number">4.</span> <span class="nav-text">实验</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#训练："><span class="nav-number">4.1.</span> <span class="nav-text">训练：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对抗样本的生成"><span class="nav-number">4.2.</span> <span class="nav-text">对抗样本的生成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">4.3.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结论"><span class="nav-number">4.4.</span> <span class="nav-text">结论</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gulico</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.3.0</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+
+    
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.3.0"></script>
+  <script src="/js/motion.js?v=7.3.0"></script>
+
+
+  <script src="/js/schemes/muse.js?v=7.3.0"></script>
+
+
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', function() {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+  
+
+  
+
+  
+
+
+  
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
+    
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', function() {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'tUixx2MIs06BcUS55LA7XdJX-gzGzoHsz',
+    appKey: 'RrIrslLlxOBS5B44YcCIC0Oh',
+    placeholder: '小主有什么要问的嘛～',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>
