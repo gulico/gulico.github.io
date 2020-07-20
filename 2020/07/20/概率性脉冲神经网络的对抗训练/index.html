@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    save_scroll: false,
+    copycode: {"enable":true,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="在本文中，首次研究了在白盒对抗攻击下通过ML（Maximum Likelihood）训练的SNN的敏感性，并提出了一种可靠的训练机制，该机制被证明可以增强白盒攻击下SNN的性能。具体来说，作者研究两层SNN，并考虑频率和时间编码，以及速率和第一峰值解码。 结果阐明了在不同编码和解码方案下，SNN对对抗示例的敏感性以及鲁棒训练方法的有效性。">
+<meta name="keywords" content="攻击对抗,脉冲神经网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="概率性脉冲神经网络的对抗训练">
+<meta property="og:url" content="https://gulico.github.io/2020/07/20/概率性脉冲神经网络的对抗训练/index.html">
+<meta property="og:site_name" content="Gulico">
+<meta property="og:description" content="在本文中，首次研究了在白盒对抗攻击下通过ML（Maximum Likelihood）训练的SNN的敏感性，并提出了一种可靠的训练机制，该机制被证明可以增强白盒攻击下SNN的性能。具体来说，作者研究两层SNN，并考虑频率和时间编码，以及速率和第一峰值解码。 结果阐明了在不同编码和解码方案下，SNN对对抗示例的敏感性以及鲁棒训练方法的有效性。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://gulico.github.io/2020/07/20/概率性脉冲神经网络的对抗训练/Two-layer%20SNN%20for%20supervised%20learning.png">
+<meta property="og:image" content="https://gulico.github.io/2020/07/20/概率性脉冲神经网络的对抗训练/Greedy%20Design.png">
+<meta property="og:updated_time" content="2020-07-20T03:33:00.952Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="概率性脉冲神经网络的对抗训练">
+<meta name="twitter:description" content="在本文中，首次研究了在白盒对抗攻击下通过ML（Maximum Likelihood）训练的SNN的敏感性，并提出了一种可靠的训练机制，该机制被证明可以增强白盒攻击下SNN的性能。具体来说，作者研究两层SNN，并考虑频率和时间编码，以及速率和第一峰值解码。 结果阐明了在不同编码和解码方案下，SNN对对抗示例的敏感性以及鲁棒训练方法的有效性。">
+<meta name="twitter:image" content="https://gulico.github.io/2020/07/20/概率性脉冲神经网络的对抗训练/Two-layer%20SNN%20for%20supervised%20learning.png">
+  <link rel="canonical" href="https://gulico.github.io/2020/07/20/概率性脉冲神经网络的对抗训练/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>概率性脉冲神经网络的对抗训练 | Gulico</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  <div class="container sidebar-position-left">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Gulico</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-guestbook">
+      
+    
+
+    <a href="/guestbook" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>留言</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+    
+
+</nav>
+  <div class="site-search">
+    
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content page-post-detail">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://gulico.github.io/2020/07/20/概率性脉冲神经网络的对抗训练/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gulico">
+      <meta itemprop="description" content="I`ll spend forever wondering if you knew">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gulico">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">概率性脉冲神经网络的对抗训练
+
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-07-20 11:31:09 / 修改时间：11:33:00" itemprop="dateCreated datePublished" datetime="2020-07-20T11:31:09+08:00">2020-07-20</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/攻击对抗/" itemprop="url" rel="index"><span itemprop="name">攻击对抗</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/07/20/概率性脉冲神经网络的对抗训练/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/07/20/概率性脉冲神经网络的对抗训练/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在本文中，首次研究了在白盒对抗攻击下通过ML（Maximum Likelihood）训练的SNN的敏感性，并提出了一种可靠的训练机制，该机制被证明可以增强白盒攻击下SNN的性能。</p><p>具体来说，作者研究两层SNN，并考虑频率和时间编码，以及速率和第一峰值解码。 结果阐明了在不同编码和解码方案下，SNN对对抗示例的敏感性以及鲁棒训练方法的有效性。</p><a id="more"></a>
+
+<h1 id="snn模型"><a href="#snn模型" class="headerlink" title="snn模型"></a>snn模型</h1><p>广义线性模型（GLM）神经元的两层SNN的体系结构。（了解即可）</p>
+<p><img src="/2020/07/20/概率性脉冲神经网络的对抗训练/Two-layer SNN for supervised learning.png" alt></p>
+<h2 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h2><ul>
+<li><p>SNN采用全连接的方式。</p>
+</li>
+<li><p>在输入（感觉层）具有$N_X$个突触前神经元，在输出层具有$N_Y$个神经元。每个输出神经元都代表某一个分类。 </p>
+</li>
+<li>训练流程：<ol>
+<li>将输入示例（例如，灰度图像）编码为一组$N_X$个离散时间脉冲序列，每个串具有$T$个样本。 </li>
+<li>输入的脉冲序列被馈送到$N_Y$突触后GLM神经元，该神经元输出离散时间的脉冲序列。 </li>
+<li>然后，解码器根据输出神经元发出的脉冲序列选择图像类别。</li>
+</ol>
+</li>
+</ul>
+<h2 id="信息编码"><a href="#信息编码" class="headerlink" title="信息编码"></a>信息编码</h2><ul>
+<li>频率编码（Rate encoding）：通过生成独立且均匀分布的伯努利矢量，将输入信号的每个条目转换为离散时间脉冲序列。 产生“ 1”（即脉冲）的概率与条目的值成正比。</li>
+<li>时间编码（Time encoding）：将输入信号的每个条目转换为仅具有一个脉冲的脉冲序列，其时序取决于条目值。 <ul>
+<li>假设强度-潜伏期编码（intensity-to-latency encoding），时间间隔[1，T]中的脉冲定时线性地取决于输入值，因此最大值会在第一个时间样本上产生脉冲 t = 1，并且最小值映射到最后一次采样t = T中的峰值。</li>
+</ul>
+</li>
+</ul>
+<h2 id="GLM神经元模型"><a href="#GLM神经元模型" class="headerlink" title="GLM神经元模型"></a>GLM神经元模型</h2><p>来自$N_X$个突触前神经元的输入脉冲序列，与所有突触后神经元的输出脉冲序列之间的关系遵循具有规范链接功能的伯努利GLM。（太复杂了不懂！！具体看paper）</p>
+<h2 id="信息解码"><a href="#信息解码" class="headerlink" title="信息解码"></a>信息解码</h2><ul>
+<li><p>频率解码（Rate decoding）：通过选择脉冲数量最多的输出神经元来执行解码。</p>
+</li>
+<li><p>首次-脉冲解码（First-to-spike decoding）：选择与第一次被选择的神经元相对应的类别。</p>
+</li>
+</ul>
+<h2 id="最大似然训练（Maximum-Likelihood-ML-training）"><a href="#最大似然训练（Maximum-Likelihood-ML-training）" class="headerlink" title="最大似然训练（Maximum Likelihood,ML training）"></a>最大似然训练（Maximum Likelihood,ML training）</h2><ul>
+<li><p>频率解码：</p>
+<ul>
+<li>对应于正确标签$c∈(1，…，N_Y)$的突触后神经元被分配一个期望的输出脉冲序列$y_c$，其中包含多个脉冲，而全零向量$y_i，i ≠c$， 被分配给其他突触后神经元。</li>
+<li>使用ML标准，得到给定的$N_X$输入脉冲序列，一个最大化期望输出脉冲序列的对数概率之和。 （其余看不懂）</li>
+</ul>
+</li>
+<li><p>首次-脉冲解码（First-to-spike decoding）：选择对应于第一个脉冲神经元的类。因此，ML准则最大化了在输出神经元上对应于正确标签的脉冲的概率。</p>
+</li>
+</ul>
+<p>（这些都不重要！！）</p>
+<h1 id="生成对抗样本"><a href="#生成对抗样本" class="headerlink" title="生成对抗样本"></a>生成对抗样本</h1><p>（这个比较重要！！）</p>
+<p>在这项工作中，我们基于模型的全部信息（即，参数向量θ、编码和解码策略）来考虑白盒攻击。</p>
+<p>在给定示例$(x，c)$的情况下，获得了对抗性脉冲序列$x_{adv}$，其中要使分类者更有可能预测不正确的标签c ′≠c的前提下，扰动$\epsilon$尽可能小。</p>
+<h2 id="干扰类型"><a href="#干扰类型" class="headerlink" title="干扰类型"></a>干扰类型</h2><ol>
+<li>消除攻击：从输入x中消除一个或多个脉冲</li>
+<li>增加攻击：将一个或多个脉冲加到输入x上</li>
+<li>翻转攻击：一个或多个脉冲被增加或移除（这个与前面两个有啥区别？）</li>
+</ol>
+<ul>
+<li><p><strong>干扰大小的衡量：</strong></p>
+<h4 id="对于所有攻击，通过添加和-或删除的脉冲数量来测量干扰的大小。-从数学上讲，这可以表示为汉明距离（Hamming-distance）："><a href="#对于所有攻击，通过添加和-或删除的脉冲数量来测量干扰的大小。-从数学上讲，这可以表示为汉明距离（Hamming-distance）：" class="headerlink" title="对于所有攻击，通过添加和/或删除的脉冲数量来测量干扰的大小。 从数学上讲，这可以表示为汉明距离（Hamming distance）："></a>对于所有攻击，通过添加和/或删除的脉冲数量来测量干扰的大小。 从数学上讲，这可以表示为<strong>汉明距离（Hamming distance）</strong>：</h4><p>在信息论中，两个等长字符串之间的汉明距离是两个字符串对应位置的不同字符的个数。换句话说，它就是将一个字符串变换成另外一个字符串所需要替换的字符个数。</p>
+<p>如：1011101 与 1001001 之间的汉明距离是 2。</p>
+<script type="math/tex; mode=display">
+d_{H}\left(\mathbf{x}, \mathbf{x}^{\text {adv }}\right)=\sum_{j=1}^{N_{X}} \sum_{t=1}^{T} 1\left(x_{j, t} \neq x_{j, t}^{\text {adv }}\right)</script><p>其中，$1(·)$表示，若$1(a)$中a为真，则$1(a)=1$；反之，$1(a)=0$</p>
+</li>
+</ul>
+<h2 id="干扰类型的选择"><a href="#干扰类型的选择" class="headerlink" title="干扰类型的选择"></a>干扰类型的选择</h2><p>为了选择输入x的对抗性干扰，我们考虑给定不正确的目标类别$c’≠c$的可能性的最大化，即找到最不可能是正确类别$c$的类别$c’$。</p>
+<p>选择目标类别c’的有效方法是找到在给定模型θ下可能性最小的类别$c^{LL}$。 从数学上讲，对于给定的训练示例$(x，c)$，通过解决以下公式可获得可能性最小的类别：</p>
+<script type="math/tex; mode=display">
+c^{\mathrm{LL}}=\underset{c^{\prime} \neq c}{\operatorname{argmin}} \quad L_{\boldsymbol{\theta}}\left(\mathbf{x}, c^{\prime}\right)</script><p>选择干扰类型：</p>
+<script type="math/tex; mode=display">
+\begin{array}{ll}
+{\max _{\mathbf{p} \in \mathcal{C}}} & {L_{\boldsymbol{\theta}}\left(\mathbf{x}+\mathbf{p}, c^{\mathrm{LL}}\right)} \\
+{\text { s.t. }} & {\|\mathbf{p}\|_{0} \leq \epsilon N_{X} T}
+\end{array}</script><p>其中$|\mathbf{p}|_{0}$表示干扰序列的非零元素数。</p>
+<p>$\epsilon$控制攻击的强度（比如，2018个输入神经元中选择5个添加干扰）。 </p>
+<p>允许从$N_{X} T$个输入样本（即每个输入神经元的$T$个样本）的一部分中添加或删除脉冲。 </p>
+<p>以上公式中的的约束集$C$由二进制干扰集合给定：</p>
+<p>$C = (0，1)^{N_X T}$，用于加攻击；</p>
+<p>$C = (0，-1)^{N_X T}$表示删除攻击；</p>
+<p>$C = (0，±1)^{N_X T}$ ，用于翻转攻击。</p>
+<p><img src="/2020/07/20/概率性脉冲神经网络的对抗训练/Greedy Design.png" alt></p>
+<h2 id="复杂度优化"><a href="#复杂度优化" class="headerlink" title="复杂度优化"></a>复杂度优化</h2><p>精确解决方案需要遍历$N<em>{X} T$个样本的所有可能干扰，复杂度过高。如算法1所述，在$⌊\epsilon N</em>{X} T⌋$次迭代中的每一次迭代，该方法都会根据攻击类型寻找添加，删除或翻转的最佳脉冲。 </p>
+<p>作者通过仅搜索所有输入神经元的前$T_A$个样本，降低了复杂性。</p>
+<h1 id="强化训练"><a href="#强化训练" class="headerlink" title="强化训练"></a>强化训练</h1><p>在基于SGD的训练阶段中，每个训练示例$(x，c)$被替换为从算法1获得的当前迭代θ的对抗示例$x_{adv}$。 </p>
+<h1 id="实验和分析"><a href="#实验和分析" class="headerlink" title="实验和分析"></a>实验和分析</h1><ul>
+<li><p>数据集：标准的USPS数据集。</p>
+<ul>
+<li>$N_X = 256$，16×16图像中的每个像素对应一个输入神经元。</li>
+<li>我们仅关注{1，5，7，9}类，并设置T = K =16。</li>
+<li>我们假设测试阶段的最坏情况$T_A=T$。 </li>
+</ul>
+</li>
+<li><p>分析：</p>
+<ul>
+<li><p>对抗性变化$\epsilon$即使将值设置为很小，也可能导致分类准确度显着下降，尤其是在使用攻击性最强的翻转攻击时。</p>
+</li>
+<li><p>首次-脉冲解码（First-to-spike decoding）对加法和翻转攻击更有抵抗力，但比频率解码难抵御消除攻击。 </p>
+<p>原因：频率解码，选择脉冲数量最多的输出神经元来执行解码。 然而，删除脉冲的操作可能对首次-脉冲解码更有害，因为它可能会阻止正确的神经元脉冲。</p>
+</li>
+<li><p>在使用首次-脉冲解码的前提下，时间编码被认为比频率编码的弹性差很多。 </p>
+<p>原因：通过删除选定的脉冲，很可能地使时间编码与每个输入神经元的单个脉冲相关联，因此很容易失效。（？）</p>
+</li>
+<li><p>即使干扰不等于攻击者在测试阶段使用的值，鲁棒训练也可以显着提高SNN分类器的鲁棒性。此外，增加干扰会提高训练后的SNN的鲁棒性，但代价是计算复杂度更高。</p>
+</li>
+<li><p>即使在训练过程中$T_A≪T$，鲁棒训练仍然可以提高SNN分类的鲁棒性。</p>
+</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/攻击对抗/" rel="tag"># 攻击对抗</a>
+            
+              <a href="/tags/脉冲神经网络/" rel="tag"># 脉冲神经网络</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/07/20/脉冲神经网络的攻击对抗健壮性综合分析/" rel="next" title="脉冲神经网络的攻击对抗健壮性综合分析">
+                  <i class="fa fa-chevron-left"></i> 脉冲神经网络的攻击对抗健壮性综合分析
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="comments"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.jpg"
+      alt="Gulico">
+  <p class="site-author-name" itemprop="name">Gulico</p>
+  <div class="site-description motion-element" itemprop="description">I`ll spend forever wondering if you knew</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/gulico" title="GitHub &rarr; https://github.com/gulico" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:wxy_official@foxmail.com" title="E-Mail &rarr; mailto:wxy_official@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="http://weibo.com/5915498708/profile" title="Weibo &rarr; http://weibo.com/5915498708/profile" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#snn模型"><span class="nav-number">1.</span> <span class="nav-text">snn模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#网络结构"><span class="nav-number">1.1.</span> <span class="nav-text">网络结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信息编码"><span class="nav-number">1.2.</span> <span class="nav-text">信息编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GLM神经元模型"><span class="nav-number">1.3.</span> <span class="nav-text">GLM神经元模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信息解码"><span class="nav-number">1.4.</span> <span class="nav-text">信息解码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最大似然训练（Maximum-Likelihood-ML-training）"><span class="nav-number">1.5.</span> <span class="nav-text">最大似然训练（Maximum Likelihood,ML training）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#生成对抗样本"><span class="nav-number">2.</span> <span class="nav-text">生成对抗样本</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#干扰类型"><span class="nav-number">2.1.</span> <span class="nav-text">干扰类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#对于所有攻击，通过添加和-或删除的脉冲数量来测量干扰的大小。-从数学上讲，这可以表示为汉明距离（Hamming-distance）："><span class="nav-number">2.1.0.1.</span> <span class="nav-text">对于所有攻击，通过添加和/或删除的脉冲数量来测量干扰的大小。 从数学上讲，这可以表示为汉明距离（Hamming distance）：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#干扰类型的选择"><span class="nav-number">2.2.</span> <span class="nav-text">干扰类型的选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复杂度优化"><span class="nav-number">2.3.</span> <span class="nav-text">复杂度优化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#强化训练"><span class="nav-number">3.</span> <span class="nav-text">强化训练</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实验和分析"><span class="nav-number">4.</span> <span class="nav-text">实验和分析</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gulico</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.3.0</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+
+    
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.3.0"></script>
+  <script src="/js/motion.js?v=7.3.0"></script>
+
+
+  <script src="/js/schemes/muse.js?v=7.3.0"></script>
+
+
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', function() {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+  
+
+  
+
+  
+
+
+  
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
+    
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', function() {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'tUixx2MIs06BcUS55LA7XdJX-gzGzoHsz',
+    appKey: 'RrIrslLlxOBS5B44YcCIC0Oh',
+    placeholder: '小主有什么要问的嘛～',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>
