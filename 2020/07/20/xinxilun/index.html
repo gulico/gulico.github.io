@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    save_scroll: false,
+    copycode: {"enable":true,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="参考资料：A Short Introduction to Entropy, Cross-Entropy and KL-DivergenceJoint, Conditional, &amp;amp; Mutual Information &amp;amp; A Case Study联合熵（joined entropy）、条件熵（conditional entropy）、相对熵（relative entropy）、互">
+<meta name="keywords" content="信息论">
+<meta property="og:type" content="article">
+<meta property="og:title" content="信息熵、交叉熵、KL-散度、联合熵、条件熵和互信息">
+<meta property="og:url" content="https://gulico.github.io/2020/07/20/xinxilun/index.html">
+<meta property="og:site_name" content="Gulico">
+<meta property="og:description" content="参考资料：A Short Introduction to Entropy, Cross-Entropy and KL-DivergenceJoint, Conditional, &amp;amp; Mutual Information &amp;amp; A Case Study联合熵（joined entropy）、条件熵（conditional entropy）、相对熵（relative entropy）、互">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://gulico.github.io/2020/07/20/xinxilun/Cross_Entropy_1.png?lastModify=1595209222">
+<meta property="og:image" content="https://gulico.github.io/2020/07/20/xinxilun/Cross-Entropy_2.png?lastModify=1595209222">
+<meta property="og:image" content="https://gulico.github.io/2020/07/20/xinxilun/Cross-Entropy_3.png?lastModify=1595209222">
+<meta property="og:image" content="https://gulico.github.io/2020/07/20/xinxilun/Cross-Entropy_4.png?lastModify=1595209222">
+<meta property="og:image" content="https://gulico.github.io/2020/07/20/xinxilun/Cross-Entropy_5.png?lastModify=1595209222">
+<meta property="og:image" content="https://gulico.github.io/2020/07/20/xinxilun/mutual%20information.png">
+<meta property="og:updated_time" content="2020-07-20T02:05:14.310Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="信息熵、交叉熵、KL-散度、联合熵、条件熵和互信息">
+<meta name="twitter:description" content="参考资料：A Short Introduction to Entropy, Cross-Entropy and KL-DivergenceJoint, Conditional, &amp;amp; Mutual Information &amp;amp; A Case Study联合熵（joined entropy）、条件熵（conditional entropy）、相对熵（relative entropy）、互">
+<meta name="twitter:image" content="https://gulico.github.io/2020/07/20/xinxilun/Cross_Entropy_1.png?lastModify=1595209222">
+  <link rel="canonical" href="https://gulico.github.io/2020/07/20/xinxilun/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>信息熵、交叉熵、KL-散度、联合熵、条件熵和互信息 | Gulico</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  <div class="container sidebar-position-left">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Gulico</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-guestbook">
+      
+    
+
+    <a href="/guestbook" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>留言</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+    
+
+</nav>
+  <div class="site-search">
+    
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content page-post-detail">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://gulico.github.io/2020/07/20/xinxilun/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gulico">
+      <meta itemprop="description" content="I`ll spend forever wondering if you knew">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gulico">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">信息熵、交叉熵、KL-散度、联合熵、条件熵和互信息
+
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-07-20 09:38:52 / 修改时间：10:05:14" itemprop="dateCreated datePublished" datetime="2020-07-20T09:38:52+08:00">2020-07-20</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/信息论/" itemprop="url" rel="index"><span itemprop="name">信息论</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/07/20/xinxilun/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/07/20/xinxilun/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>参考资料：</p><p><a href="https://www.youtube.com/watch?v=ErfnhcEV1O8" target="_blank" rel="noopener">A Short Introduction to Entropy, Cross-Entropy and KL-Divergence</a></p><p><a href="https://www.youtube.com/watch?v=jkgKWmCb5AE" target="_blank" rel="noopener">Joint, Conditional, &amp; Mutual Information &amp; A Case Study</a></p><p><a href="https://blog.csdn.net/FrankieHello/article/details/89219940" target="_blank" rel="noopener">联合熵（joined entropy）、条件熵（conditional entropy）、相对熵（relative entropy）、互信息（mutual information）以及相关关系整理</a></p><a id="more"></a>
+
+
+
+<p><a href="https://www.zhihu.com/question/304499706/answer/1266281483" target="_blank" rel="noopener">什么是「互信息」？</a></p>
+<h2 id="熵"><a href="#熵" class="headerlink" title="熵"></a>熵</h2><ul>
+<li><p>excample1:</p>
+<p>若今天天气有两种可能（可能性均等）：晴天或者是雨天。</p>
+<p>用最少的bit来传递信息，则只需要1bits，即1表示晴天，0表示雨天；或者相反。</p>
+</li>
+<li><p>excample2:</p>
+<p>假设今天天气有8种可能（可能性均等），</p>
+<p>则，实际传达的信息位数为$2^3 = 8$，$log_2(8)=3$，即3bits。</p>
+</li>
+<li><p>excample3:</p>
+<p>如果可能性不同呢？</p>
+<p>假设晴天75%，雨天25%</p>
+<ul>
+<li><p>雨天传达的信息位数为$log_2(4) =  -log_2(0.25) =2$，即2bits</p>
+<p>从1到0.25，雨天的确定性下降到了1/4，我们得到的信息较多</p>
+</li>
+<li><p>晴天传达的信息位数为$-log_2(0.75) =0.41$，即0.41bits</p>
+<p>从1到0.71，晴天的确定性下降的不多，但我们所得到的信息却很少</p>
+</li>
+</ul>
+<p>我们平均从气象站中得到的信息：$0.75<em>0.41+0.25</em>2=0.81bits$</p>
+</li>
+</ul>
+<h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>熵是衡量随机变量不确定性的指标。</p>
+<h3 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h3><p>  $\mathrm{H}(\mathbf{p})=-\Sigma<em>{i} p</em>{i} \log <em>{2}\left(p</em>{i}\right)$</p>
+<p>  如果天气变化很大，熵将很大；反之，熵会很小。</p>
+<h2 id="交叉熵"><a href="#交叉熵" class="headerlink" title="交叉熵"></a>交叉熵</h2><ul>
+<li><p>接下来我们将8种天气编码，如下图:</p>
+<p><img src="/2020/07/20/xinxilun/Cross_Entropy_1.png?lastModify=1595209222" alt="Cross_Entropy_1"></p>
+<p>​    消息长度为3位，这就是<strong>交叉熵</strong></p>
+<p>​    cross-entropy=3</p>
+</li>
+<li><p>8种天气的概率不同：<img src="/2020/07/20/xinxilun/Cross-Entropy_2.png?lastModify=1595209222" alt="Cross-Entropy_2"></p>
+<p>熵=$0.35<em>log_2(0.35)+…+0.25</em>log_2(0.01)=2.23bits$</p>
+<p>这意味着每次发出3位信息，只有2.23位为有效信息。</p>
+</li>
+<li><p>重新编写成不同长度的编码</p>
+<p><img src="/2020/07/20/xinxilun/Cross-Entropy_3.png?lastModify=1595209222" alt="Cross-Entropy_3"></p>
+<p>平均位数为2.42位，这是新的交叉熵，比之前的3位更好，但仍然不低于2.23位</p>
+</li>
+<li><p>将编码反过来</p>
+<p><img src="/2020/07/20/xinxilun/Cross-Entropy_4.png?lastModify=1595209222" alt="Cross-Entropy_4"></p>
+<p>平均位数位4.58位， 是每条发送的必要消息的两倍。</p>
+</li>
+<li><p>设p = 真实分布；q = 预测分布，则：</p>
+<p><img src="/2020/07/20/xinxilun/Cross-Entropy_5.png?lastModify=1595209222" alt="Cross-Entropy_5"></p>
+<p>Cross-Entropy:</p>
+<p>$\mathrm{H}(\mathrm{p}, \mathrm{q})=-\Sigma<em>{\mathrm{i}} p</em>{\mathrm{i}} \log <em>{2}\left(q</em>{i}\right)$</p>
+</li>
+</ul>
+<h2 id="KL-散度"><a href="#KL-散度" class="headerlink" title="KL-散度"></a>KL-散度</h2><p>交叉熵超过熵的量，我们称为KL-散度。</p>
+<p>Cross-Entropy = Entropy + KL-Divergence。</p>
+<p>KL Divergence:<br>$\mathrm{D}_{\mathrm{KL}}(p | q)=\mathrm{H}(p, q)-\mathrm{H}(p)$</p>
+<ul>
+<li><p>上面的例子中KL-散度为</p>
+<p>$\mathrm{D}_{\mathrm{KL}}(p | q)=4.58-2.23$ = 2.35</p>
+</li>
+</ul>
+<h2 id="联合熵（Joint-Entropy）"><a href="#联合熵（Joint-Entropy）" class="headerlink" title="联合熵（Joint Entropy）"></a>联合熵（Joint Entropy）</h2><p>联合熵是与一组随机变量相关的度量。</p>
+<p>随机变量可以是二进制序列，序列的事件就是它的位。</p>
+<p>两个变量的熵：</p>
+<script type="math/tex; mode=display">
+H(X, Y)=-\sum_{x} \sum_{y} P(x, y) \log _{2}[P(x, y)]</script><p>n个变量的熵：</p>
+<script type="math/tex; mode=display">
+H\left(X_{1}, \ldots, X_{n}\right)=-\sum_{x_{1}} \ldots \sum_{x_{n}} P\left(x_{1}, \ldots, x_{n}\right) \log _{2}\left[P\left(x_{1}, \ldots, x_{n}\right)\right]</script><ul>
+<li>encample：假设2种天气和2种温度<script type="math/tex; mode=display">
+\begin{aligned}
+P(\operatorname{sunn} y, h o t) &=\frac{1}{2} \\
+P(\operatorname{sunn} y, \operatorname{cod}) &=\frac{1}{4} \\
+P(\operatorname{rain} y, \operatorname{cool}) &=\frac{1}{4} \\
+P(\operatorname{rain} y, \operatorname{hot}) &=0
+\end{aligned}</script>根据联合熵公式，计算可得：<script type="math/tex; mode=display">
+\begin{aligned}
+H(X, Y) &=-\left[\frac{1}{2} \log \frac{1}{2}+\frac{1}{4} \log \frac{1}{4}+\frac{1}{4} \log \frac{1}{4}+0 \log 0\right] \\
+&=-\left[-\frac{1}{2}+-\frac{1}{2}+-\frac{1}{2}+0\right] \\
+&=\frac{3}{2}
+\end{aligned}</script> 这说明事件不是独立的，因为联合熵不等于事件联合概率的总和</li>
+</ul>
+<h2 id="条件熵（Conditional-Entropy）"><a href="#条件熵（Conditional-Entropy）" class="headerlink" title="条件熵（Conditional Entropy）"></a>条件熵（Conditional Entropy）</h2><p>条件熵的表现形式是：</p>
+<script type="math/tex; mode=display">
+H(X \mid Y)=-\sum_{x \in X, y \in Y} p(x \mid y) \log _{2}(p(x \mid y))</script><p>当 $X,Y$是对立的随机变量时，条件熵的表现形式是：</p>
+<script type="math/tex; mode=display">
+H(X \mid Y)=-\sum_{x \in X, y \in Y} p(x) \log _{2}(p(x))=H(X)</script><p>条件熵和联合熵之间的关系是：</p>
+<script type="math/tex; mode=display">
+H(X, Y)=H(X)+H(Y \mid X)=H(Y)+H(X \mid Y)</script><ul>
+<li>当且仅当Y完全由X决定时，$H(X \mid Y)=0$</li>
+<li>当且仅当Y和X是完全独立的的随机变量时，$H(X \mid Y)=H(Y)$<ul>
+<li>X不提供任何y的信息</li>
+<li>给定x条件下的y的熵等于，y的熵，无需考虑x。</li>
+</ul>
+</li>
+</ul>
+<p>(条件概率是y事件确认成立，然后发生x事件的概率)</p>
+<h2 id="互信息（Mutual-Information）"><a href="#互信息（Mutual-Information）" class="headerlink" title="互信息（Mutual Information）"></a>互信息（Mutual Information）</h2><p>对于两个随机变量 $X,Y$，它们的互信息可以定义为 $X,Y$的联合分布和对立分布乘积的相对熵。</p>
+<script type="math/tex; mode=display">
+I(X ; Y)=D(p(x, y) \| p(x) q(y))=-\sum_{x \in X, y \in Y} p(x, y) \log _{2} \frac{p(x, y)}{p(x) p(y)}</script><p>经过变形和计算可以得到互信息：</p>
+<script type="math/tex; mode=display">
+I(X ; Y)=H(X)+H(Y)-H(X, Y)</script><p><strong>互信息的意义是衡量$X$到$Y$的不确定性的减少程度</strong>，(衡量随机变量之间相互依赖程度的度量。)</p>
+<p>另外互信息是对称的（symmetric），也就是$I(X;Y)=I(Y;X)$，所以互信息不能用于确定信息流的方向。</p>
+<p>使用概率的加和规则和乘积规则,我们看到互信息和条件熵之间的关系为</p>
+<script type="math/tex; mode=display">
+I[\boldsymbol{x}, \boldsymbol{y}]=H[\boldsymbol{x}]-H[\boldsymbol{x} \mid \boldsymbol{y}]=H[\boldsymbol{y}]-H[\boldsymbol{y} \mid \boldsymbol{x}]</script><ul>
+<li><p>excample：</p>
+<blockquote>
+<p>比如说有一天你的女神突然问你：“你猜猜我的爱豆是TFboys里的谁？”</p>
+<p>唉这要是猜不到女神的心岂不是很完蛋，追求女神的路从此就凉了。</p>
+<p>正当你非常不确定的时候，女神又说：“给你个提示吧，名字是四个字。”</p>
+<p>此时你特别开心，因为对于答案的不确定性一下子就减少了（当然这个例子比较极端，不确定性直接降为0）</p>
+<p>所以，互信息的意思就是通过了知道一个变量减少了对另一个变量的不确定性。</p>
+<p>这个不确定性减少的量也就是互信息的大小。<br>链接：<a href="https://www.zhihu.com/question/304499706/answer/1266281483" target="_blank" rel="noopener">https://www.zhihu.com/question/304499706/answer/1266281483</a></p>
+</blockquote>
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>对于随机变量  $X,Y$，它们的熵、联合熵、条件熵以及互信息之间的关系是：<br><img src="/2020/07/20/xinxilun/mutual information.png" alt="mutual information"></p>
+<p>其中，左边的圆形区域表示随机变量$X$的熵，右边的圆形区域表示随机变量$Y$的熵。</p>
+<p>左边的$H(X∣Y)$区域表示在随机变量$Y$给定的条件下随机变量$X$的条件熵；左边的$H(Y∣X)$区域表示在随机变量$X$给定的条件下随机变量$Y$的条件熵。</p>
+<p>两个圆中间相交的部分表示随机变量$X,Y$的<strong>互信息</strong>。两个圆构成的整体部分表示$X,Y$的<strong>联合熵</strong>。</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/信息论/" rel="tag"># 信息论</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/11/21/以生物可塑性为核心的类脑脉冲神经网络学习笔记/" rel="next" title="以生物可塑性为核心的类脑脉冲神经网络学习笔记">
+                  <i class="fa fa-chevron-left"></i> 以生物可塑性为核心的类脑脉冲神经网络学习笔记
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="comments"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.jpg"
+      alt="Gulico">
+  <p class="site-author-name" itemprop="name">Gulico</p>
+  <div class="site-description motion-element" itemprop="description">I`ll spend forever wondering if you knew</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/gulico" title="GitHub &rarr; https://github.com/gulico" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:wxy_official@foxmail.com" title="E-Mail &rarr; mailto:wxy_official@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="http://weibo.com/5915498708/profile" title="Weibo &rarr; http://weibo.com/5915498708/profile" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#熵"><span class="nav-number">1.</span> <span class="nav-text">熵</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义"><span class="nav-number">1.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#公式"><span class="nav-number">1.2.</span> <span class="nav-text">公式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#交叉熵"><span class="nav-number">2.</span> <span class="nav-text">交叉熵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KL-散度"><span class="nav-number">3.</span> <span class="nav-text">KL-散度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#联合熵（Joint-Entropy）"><span class="nav-number">4.</span> <span class="nav-text">联合熵（Joint Entropy）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#条件熵（Conditional-Entropy）"><span class="nav-number">5.</span> <span class="nav-text">条件熵（Conditional Entropy）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#互信息（Mutual-Information）"><span class="nav-number">6.</span> <span class="nav-text">互信息（Mutual Information）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gulico</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.3.0</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+
+    
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.3.0"></script>
+  <script src="/js/motion.js?v=7.3.0"></script>
+
+
+  <script src="/js/schemes/muse.js?v=7.3.0"></script>
+
+
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', function() {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+  
+
+  
+
+  
+
+
+  
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
+    
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', function() {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'tUixx2MIs06BcUS55LA7XdJX-gzGzoHsz',
+    appKey: 'RrIrslLlxOBS5B44YcCIC0Oh',
+    placeholder: '小主有什么要问的嘛～',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

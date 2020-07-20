@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"hide","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    save_scroll: false,
+    copycode: {"enable":true,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="以下为出现在文章《Satellite System Graph: Towards the Efﬁciency Up-Boundary of Graph-Based Approximate Nearest Neighbor Search(卫星系图：接近基于图的近似最近邻搜索效率的上界)》中的两个算法，下面做简单注释。">
+<meta name="keywords" content="搜索">
+<meta property="og:type" content="article">
+<meta property="og:title" content="近似最近邻算法SSG学习笔记（二）伪码注释">
+<meta property="og:url" content="https://gulico.github.io/2019/08/14/近似最近邻算法SSG学习笔记（二）伪码注释/index.html">
+<meta property="og:site_name" content="Gulico">
+<meta property="og:description" content="以下为出现在文章《Satellite System Graph: Towards the Efﬁciency Up-Boundary of Graph-Based Approximate Nearest Neighbor Search(卫星系图：接近基于图的近似最近邻搜索效率的上界)》中的两个算法，下面做简单注释。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-10-25T01:18:16.049Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="近似最近邻算法SSG学习笔记（二）伪码注释">
+<meta name="twitter:description" content="以下为出现在文章《Satellite System Graph: Towards the Efﬁciency Up-Boundary of Graph-Based Approximate Nearest Neighbor Search(卫星系图：接近基于图的近似最近邻搜索效率的上界)》中的两个算法，下面做简单注释。">
+  <link rel="canonical" href="https://gulico.github.io/2019/08/14/近似最近邻算法SSG学习笔记（二）伪码注释/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>近似最近邻算法SSG学习笔记（二）伪码注释 | Gulico</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  <div class="container sidebar-position-left">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Gulico</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-guestbook">
+      
+    
+
+    <a href="/guestbook" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>留言</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+    
+
+</nav>
+  <div class="site-search">
+    
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content page-post-detail">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://gulico.github.io/2019/08/14/近似最近邻算法SSG学习笔记（二）伪码注释/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gulico">
+      <meta itemprop="description" content="I`ll spend forever wondering if you knew">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gulico">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">近似最近邻算法SSG学习笔记（二）伪码注释
+
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-08-14 16:49:05" itemprop="dateCreated datePublished" datetime="2019-08-14T16:49:05+08:00">2019-08-14</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-10-25 09:18:16" itemprop="dateModified" datetime="2019-10-25T09:18:16+08:00">2019-10-25</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/08/14/近似最近邻算法SSG学习笔记（二）伪码注释/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/08/14/近似最近邻算法SSG学习笔记（二）伪码注释/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>以下为出现在文章《Satellite System Graph: Towards the Efﬁciency Up-Boundary of Graph-Based Approximate Nearest Neighbor Search(卫星系图：接近基于图的近似最近邻搜索效率的上界)》中的两个算法，下面做简单注释。</p><a id="more"></a>
+<h1 id="算法1：贪婪搜索Search-on-Graph-G-p-q-l"><a href="#算法1：贪婪搜索Search-on-Graph-G-p-q-l" class="headerlink" title="算法1：贪婪搜索Search-on-Graph(G, p, q, l)"></a>算法1：贪婪搜索Search-on-Graph(G, p, q, l)</h1><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 功能：在图G上从起始点p开始搜索，得到k个距离查询点q最近的点</span></span><br><span class="line"><span class="comment">* 参数：图G </span></span><br><span class="line"><span class="comment">*      起始点p  </span></span><br><span class="line"><span class="comment">*      查询点q </span></span><br><span class="line"><span class="comment">*      候选池大小l   </span></span><br><span class="line"><span class="comment">* 返回：k个距离查询点q最近的点 </span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"></span><br><span class="line">Require: graph G, <span class="built_in">start</span> node p, query point q, candidate pool size l </span><br><span class="line">Ensure: k nearest neighbors <span class="keyword">of</span> q </span><br><span class="line"></span><br><span class="line">i = <span class="number">0</span>, candidate pool S = ∅     <span class="comment"> //最初候选池S为空，候选池中元素索引序号i = 0</span></span><br><span class="line">S.<span class="built_in">add</span>(p)                                  <span class="comment"> //起始点加入候选池S</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> i &lt; l <span class="built_in">do</span>                           <span class="comment"> //当候选池中点的索引序号i小于l</span></span><br><span class="line">	i = <span class="keyword">the</span> index <span class="keyword">of</span> <span class="keyword">the</span> ﬁrst unchecked node <span class="keyword">in</span> S <span class="comment"> //i = 候选池中首个未查询的点的索引序号</span></span><br><span class="line">	mark <span class="literal">pi</span> <span class="keyword">as</span> checked                                              <span class="comment"> //标记pi为查询过的点</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">for</span> all neighbor n <span class="keyword">of</span> <span class="literal">pi</span> <span class="keyword">in</span> G <span class="built_in">do</span>                          <span class="comment"> //将pi的所有邻居加入候选池</span></span><br><span class="line">		S.<span class="built_in">add</span>(n)</span><br><span class="line">	<span class="function"><span class="keyword">end</span> <span class="title">for</span> </span></span><br><span class="line">	<span class="built_in">sort</span> S <span class="keyword">in</span> <span class="keyword">ascending</span> order <span class="keyword">of</span> <span class="keyword">the</span> distance <span class="built_in">to</span> q<span class="comment"> //将候选池中的点，以与q点的距离为依据升序排列</span></span><br><span class="line">	</span><br><span class="line">	If S.size() &gt; l, S.resize(l)                                   <span class="comment"> //若S的大小大于l，则更新S的大小</span></span><br><span class="line"><span class="function"><span class="keyword">end</span> <span class="title">while</span> </span></span><br><span class="line"><span class="literal">return</span> <span class="keyword">the</span> ﬁrst k nodes <span class="keyword">in</span> S</span><br></pre></td></tr></table></figure>
+<h1 id="算法2：建立SSG图索引SSGIndexing-D-l-r-s-α"><a href="#算法2：建立SSG图索引SSGIndexing-D-l-r-s-α" class="headerlink" title="算法2：建立SSG图索引SSGIndexing(D, l, r, s, α)"></a>算法2：建立SSG图索引SSGIndexing(D, l, r, s, α)</h1><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 算法2：SSGIndexing(D, l, r, s, α) </span></span><br><span class="line"><span class="comment">* 功能：建立SSG索引</span></span><br><span class="line"><span class="comment">* 传入参数：数据集D，</span></span><br><span class="line"><span class="comment">*		  候选集大小L</span></span><br><span class="line"><span class="comment">*		  最大度r</span></span><br><span class="line"><span class="comment">*		  导航点的数量s</span></span><br><span class="line"><span class="comment">*		  边之间的最小角度α</span></span><br><span class="line"><span class="comment">* 返回：SSG图G</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"></span><br><span class="line">Require: dataset D, candidate <span class="built_in">set</span> size l, maximum outdegree r, <span class="built_in">number</span> <span class="keyword">of</span> navigating points s, minimum angle α.</span><br><span class="line"></span><br><span class="line">Ensure: <span class="keyword">an</span> SSG G. </span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 1.建立近似kNN图：GkNN</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"></span><br><span class="line">Build <span class="keyword">an</span> approximate kNN graph Gknn. </span><br><span class="line">G = ∅. </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> all node i <span class="keyword">in</span> Gknn <span class="built_in">do</span><span class="comment"> //遍历Gknn图中的所有点i</span></span><br><span class="line">	P = ∅.<span class="comment"> //候选集P为空</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 2.候选集P从对应点的邻居和邻居的邻居中产生</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line">	<span class="keyword">for</span> all neighbor n <span class="keyword">of</span> node i <span class="built_in">do</span><span class="comment"> //遍历i的所有邻居n，加入候选集P</span></span><br><span class="line">		P.<span class="built_in">add</span>(n). </span><br><span class="line">		<span class="keyword">for</span> all neighbor n0 <span class="keyword">of</span> node n <span class="built_in">do</span><span class="comment"> //遍历n的所有邻居n0，加入候选集P</span></span><br><span class="line">			P.<span class="built_in">add</span>(n0). </span><br><span class="line">		<span class="function"><span class="keyword">end</span> <span class="title">for</span> </span></span><br><span class="line">		remove <span class="keyword">the</span> redundant nodes <span class="keyword">in</span> P.<span class="comment"> //移除P中多余的边</span></span><br><span class="line">		<span class="keyword">if</span> P.size() ≥ l <span class="keyword">then</span><span class="comment"> //若P的大小大于l，则跳出循环</span></span><br><span class="line">			break. </span><br><span class="line">		<span class="keyword">end if</span> </span><br><span class="line">	<span class="function"><span class="keyword">end</span> <span class="title">for</span> </span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 3.从候选集P中挑选符合SSG的i的邻居</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line">	<span class="built_in">sort</span> P <span class="keyword">in</span> <span class="keyword">the</span> <span class="keyword">ascending</span> order <span class="keyword">of</span> <span class="keyword">the</span> distance <span class="built_in">to</span> i.<span class="comment"> //对候选集中的点，按照与i的距离升序排序。</span></span><br><span class="line"></span><br><span class="line">	select neighbors <span class="built_in">from</span> P according <span class="built_in">to</span> <span class="keyword">the</span> deﬁnition <span class="keyword">of</span> SSG.<span class="comment"> //根据SSG选编策略，从P中选择i的邻居</span></span><br><span class="line"><span class="function"><span class="keyword">end</span> <span class="title">for</span> </span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 4.加强图的连通性</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"></span><br><span class="line">Random select s points <span class="built_in">from</span> <span class="keyword">the</span> datasets <span class="keyword">as</span> N.<span class="comment"> //随机选择s个导航点N</span></span><br><span class="line"><span class="keyword">for</span> all point n <span class="keyword">in</span> N <span class="built_in">do</span><span class="comment"> //遍历导航点</span></span><br><span class="line">	Strengthen <span class="keyword">the</span> connectivity <span class="keyword">of</span> <span class="keyword">the</span> graph <span class="keyword">with</span> </span><br><span class="line">	DFS-expanding <span class="built_in">from</span> s.<span class="comment"> //利用深度优先扩展算法，加强图的连通性</span></span><br><span class="line"><span class="function"><span class="keyword">end</span> <span class="title">for</span> <span class="title">23</span>: <span class="title">return</span> <span class="title">G</span>.</span></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/搜索/" rel="tag"># 搜索</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/08/12/近似最近邻算法SSG学习笔记（一）介绍/" rel="next" title="近似最近邻算法SSG学习笔记（一）介绍">
+                  <i class="fa fa-chevron-left"></i> 近似最近邻算法SSG学习笔记（一）介绍
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/09/12/集束搜索-Beam-Search-Algorithm/" rel="prev" title="集束搜索(Beam Search Algorithm)">
+                  集束搜索(Beam Search Algorithm) <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="comments"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.jpg"
+      alt="Gulico">
+  <p class="site-author-name" itemprop="name">Gulico</p>
+  <div class="site-description motion-element" itemprop="description">I`ll spend forever wondering if you knew</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/gulico" title="GitHub &rarr; https://github.com/gulico" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:wxy_official@foxmail.com" title="E-Mail &rarr; mailto:wxy_official@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="http://weibo.com/5915498708/profile" title="Weibo &rarr; http://weibo.com/5915498708/profile" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#算法1：贪婪搜索Search-on-Graph-G-p-q-l"><span class="nav-number">1.</span> <span class="nav-text">算法1：贪婪搜索Search-on-Graph(G, p, q, l)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法2：建立SSG图索引SSGIndexing-D-l-r-s-α"><span class="nav-number">2.</span> <span class="nav-text">算法2：建立SSG图索引SSGIndexing(D, l, r, s, α)</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gulico</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.3.0</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+
+    
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.3.0"></script>
+  <script src="/js/motion.js?v=7.3.0"></script>
+
+
+  <script src="/js/schemes/muse.js?v=7.3.0"></script>
+
+
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
+    
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', function() {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'tUixx2MIs06BcUS55LA7XdJX-gzGzoHsz',
+    appKey: 'RrIrslLlxOBS5B44YcCIC0Oh',
+    placeholder: '小主有什么要问的嘛～',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>
