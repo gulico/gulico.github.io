@@ -106,3 +106,4 @@ deploy:
   type: git
   repository: https://github.com/gulico/gulico.github.io.git
   branch: master
+

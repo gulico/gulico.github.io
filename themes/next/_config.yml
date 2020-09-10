@@ -806,7 +806,7 @@ leancloud_visitors:
   # Dependencies: https://github.com/theme-next/hexo-leancloud-counter-security
   # If you don't care about security in leancloud counter and just want to use it directly
   # (without hexo-leancloud-counter-security plugin), set `security` to `false`.
-  security: true
+  security: false
   betterPerformance: false
 
 # Another tool to show number of visitors to each article.
@@ -984,9 +984,9 @@ three:
 # Dependencies: https://github.com/theme-next/theme-next-canvas-nest
 # For more information: https://github.com/hustcc/canvas-nest.js
 canvas_nest:
-  enable: false
+  enable: true
   onmobile: true # Display on mobile or not
-  color: "0,0,255" # RGB values, use `,` to separate
+  color: "0,0,0" # RGB values, use `,` to separate
   opacity: 0.5 # The opacity of line: 0~1
   zIndex: -1 # z-index property of the background
   count: 99 # The number of lines
