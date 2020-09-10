@@ -55,19 +55,27 @@
   };
 </script>
 
-  <meta name="description" content="差分演化具体而言，在每次迭代期间，根据当前人口（父母）生成另一组候选解决方案（子项）。 然后将孩子与相应的父母进行比较，如果他们比父母更适合（拥有更高的健身价值），则存活下来。 以这种方式，仅比较父母和他的孩子，就可以同时实现保持多样性和提高健身价值的目标。优点DE不使用梯度信息进行优化，因此不需要目标函数是可微的或先前已知的。 因此，与基于梯度的方法（例如，不可微，动态，噪声等）相比，它可以用于">
-<meta name="keywords" content="攻击对抗">
+  <meta name="description" content="网上好多博客都是momo+fiddler的，而且抄来抄去，很少有真的能用的。这里记一次fiddler for mac的使用体验。第一步：安装和设置fiddler下载地址 点击右上角的设置图标 选择connections选项卡 勾选allow remote computer to connect 调整fiddler listens on port（随便设置，不超过65535，不与其他程序占用的端口冲">
+<meta name="keywords" content="计算机网络,HTTP">
 <meta property="og:type" content="article">
-<meta property="og:title" content="One Pixel Attack（学习笔记）">
-<meta property="og:url" content="https://gulico.github.io/2020/03/06/One-Pixel-Attack/index.html">
+<meta property="og:title" content="Fiddler for mac+安卓模拟器抓包豆瓣APP">
+<meta property="og:url" content="https://gulico.github.io/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/index.html">
 <meta property="og:site_name" content="Gulico">
-<meta property="og:description" content="差分演化具体而言，在每次迭代期间，根据当前人口（父母）生成另一组候选解决方案（子项）。 然后将孩子与相应的父母进行比较，如果他们比父母更适合（拥有更高的健身价值），则存活下来。 以这种方式，仅比较父母和他的孩子，就可以同时实现保持多样性和提高健身价值的目标。优点DE不使用梯度信息进行优化，因此不需要目标函数是可微的或先前已知的。 因此，与基于梯度的方法（例如，不可微，动态，噪声等）相比，它可以用于">
+<meta property="og:description" content="网上好多博客都是momo+fiddler的，而且抄来抄去，很少有真的能用的。这里记一次fiddler for mac的使用体验。第一步：安装和设置fiddler下载地址 点击右上角的设置图标 选择connections选项卡 勾选allow remote computer to connect 调整fiddler listens on port（随便设置，不超过65535，不与其他程序占用的端口冲">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-07-20T06:43:28.129Z">
+<meta property="og:image" content="https://gulico.github.io/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/1.jpg">
+<meta property="og:image" content="https://gulico.github.io/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/2.png">
+<meta property="og:image" content="https://gulico.github.io/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/3.png">
+<meta property="og:image" content="https://gulico.github.io/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/4.png">
+<meta property="og:image" content="https://gulico.github.io/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/5.png">
+<meta property="og:image" content="https://gulico.github.io/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/6.png">
+<meta property="og:image" content="https://gulico.github.io/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/7.png">
+<meta property="og:updated_time" content="2020-09-10T08:05:35.626Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="One Pixel Attack（学习笔记）">
-<meta name="twitter:description" content="差分演化具体而言，在每次迭代期间，根据当前人口（父母）生成另一组候选解决方案（子项）。 然后将孩子与相应的父母进行比较，如果他们比父母更适合（拥有更高的健身价值），则存活下来。 以这种方式，仅比较父母和他的孩子，就可以同时实现保持多样性和提高健身价值的目标。优点DE不使用梯度信息进行优化，因此不需要目标函数是可微的或先前已知的。 因此，与基于梯度的方法（例如，不可微，动态，噪声等）相比，它可以用于">
-  <link rel="canonical" href="https://gulico.github.io/2020/03/06/One-Pixel-Attack/">
+<meta name="twitter:title" content="Fiddler for mac+安卓模拟器抓包豆瓣APP">
+<meta name="twitter:description" content="网上好多博客都是momo+fiddler的，而且抄来抄去，很少有真的能用的。这里记一次fiddler for mac的使用体验。第一步：安装和设置fiddler下载地址 点击右上角的设置图标 选择connections选项卡 勾选allow remote computer to connect 调整fiddler listens on port（随便设置，不超过65535，不与其他程序占用的端口冲">
+<meta name="twitter:image" content="https://gulico.github.io/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/1.jpg">
+  <link rel="canonical" href="https://gulico.github.io/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/">
 
 
 <script id="page-configurations">
@@ -81,7 +89,7 @@
   };
 </script>
 
-  <title>One Pixel Attack（学习笔记） | Gulico</title>
+  <title>Fiddler for mac+安卓模拟器抓包豆瓣APP | Gulico</title>
   
 
 
@@ -256,7 +264,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://gulico.github.io/2020/03/06/One-Pixel-Attack/">
+    <link itemprop="mainEntityOfPage" href="https://gulico.github.io/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Gulico">
@@ -270,7 +278,7 @@
       <header class="post-header">
 
         
-          <h1 class="post-title" itemprop="name headline">One Pixel Attack（学习笔记）
+          <h1 class="post-title" itemprop="name headline">Fiddler for mac+安卓模拟器抓包豆瓣APP
 
             
           </h1>
@@ -287,19 +295,11 @@
                 
               
 
-              <time title="创建时间：2020-03-06 14:42:05" itemprop="dateCreated datePublished" datetime="2020-03-06T14:42:05+08:00">2020-03-06</time>
+              <time title="创建时间：2020-09-10 15:59:27 / 修改时间：16:05:35" itemprop="dateCreated datePublished" datetime="2020-09-10T15:59:27+08:00">2020-09-10</time>
             </span>
           
             
 
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-07-20 14:43:28" itemprop="dateModified" datetime="2020-07-20T14:43:28+08:00">2020-07-20</time>
-              </span>
             
           
             <span class="post-meta-item">
@@ -308,7 +308,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/攻击对抗/" itemprop="url" rel="index"><span itemprop="name">攻击对抗</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/计算机网络/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a></span>
 
                 
                 
@@ -328,8 +328,8 @@
       
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/03/06/One-Pixel-Attack/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/03/06/One-Pixel-Attack/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -345,53 +345,47 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="差分演化"><a href="#差分演化" class="headerlink" title="差分演化"></a>差分演化</h1><p>具体而言，在每次迭代期间，根据当前人口（父母）生成另一组候选解决方案（子项）。 然后将孩子与相应的父母进行比较，如果他们比父母更适合（拥有更高的健身价值），则存活下来。 以这种方式，仅比较父母和他的孩子，就可以同时实现保持多样性和提高健身价值的目标。</p><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>DE不使用梯度信息进行优化，因此不需要目标函数是可微的或先前已知的。 因此，与基于梯度的方法（例如，不可微，动态，噪声等）相比，它可以用于更广泛的优化问题。 使用DE生成对抗性图像具有以下主要优点：</p><a id="more"></a>
+        <p>网上好多博客都是momo+fiddler的，而且抄来抄去，很少有真的能用的。</p><p>这里记一次fiddler for mac的使用体验。</p><h3 id="第一步：安装和设置fiddler"><a href="#第一步：安装和设置fiddler" class="headerlink" title="第一步：安装和设置fiddler"></a>第一步：安装和设置fiddler</h3><p><a href="https://www.telerik.com/download/fiddler-everywhere" target="_blank" rel="noopener">下载地址</a></p><ol>
+<li>点击右上角的设置图标</li>
+<li>选择connections选项卡</li>
+<li>勾选allow remote computer to connect</li>
+<li>调整fiddler listens on port（随便设置，不超过65535，不与其他程序占用的端口冲突即可）</li>
+</ol><a id="more"></a>
 
-<ul>
-<li><p>寻找全局最优值的可能性更高：</p>
-<p>DE是一种元启发式算法，与梯度下降或贪婪搜索算法相比，它相对较少地受到局部最小值的限制（这部分是由于多样性保持机制和一组候选解的使用）。 此外，本文中考虑的问题具有严格的约束条件（只能修改一个像素），这使其相对困难。</p>
+
+
+<p><img src="/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/1.jpg" alt="1"></p>
+<p>查看电脑ip，终端输入<code>ifconfig | grep &quot;inet&quot;</code></p>
+<p><img src="/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/2.png" alt="image-20200910134607621"></p>
+<h3 id="第二步：安装配置安卓模拟器"><a href="#第二步：安装配置安卓模拟器" class="headerlink" title="第二步：安装配置安卓模拟器"></a>第二步：安装配置安卓模拟器</h3><p>我这里选择的是<a href="https://www.baidu.com/link?url=K0AudkJQOs8O4uSjQHT3sypCuYB_4hliwPz2xj8XcXi&amp;ck=5976.10.9999.389.396.263.137.1300&amp;shh=www.baidu.com&amp;sht=baiduhome_pg&amp;wd=&amp;eqid=ac99bd300000a8e2000000055f59b794" target="_blank" rel="noopener">网易mumu安卓模拟器</a>。</p>
+<ol>
+<li><p>打开模拟器，系统应用-设置-WLAN。鼠标<strong>长按</strong>yiAXCBD就会出现下图中的选项。</p>
+<p><img src="/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/3.png" alt="screenshot_20200910_135507"></p>
 </li>
-<li><p>要求目标系统提供较少的信息</p>
-<p>DE不需要像传统的优化方法（如梯度下降法和拟牛顿法）所要求的那样使优化问题具有可微性。 这在生成对抗性图像的情况下至关重要，因为1）存在不可区分的网络，例如[26]。 2）计算梯度需要更多有关目标系统的信息，这在许多情况下几乎是不现实的。</p>
+<li><p>选择修改网络，代理选择手动，填入主机ip和刚才设置的端口号<img src="/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/4.png" alt="screenshot_20200910_135712"></p>
 </li>
-<li><p>简单性</p>
-<p>此处提出的方法与所使用的分类器无关。 对于发生的攻击，知道概率标签就足够了。</p>
-</li>
-</ul>
-<h2 id="方法和设置"><a href="#方法和设置" class="headerlink" title="方法和设置"></a>方法和设置</h2><p>我们将扰动编码为一个数组（候选解），该数组通过差分演化进行了优化（演化）。 一个候选解包含固定数量的扰动，并且每个扰动都是一个元组，该元组包含五个元素：x-y坐标和该扰动的RGB值。 一个扰动会修改一个像素。 候选解（人口）的初始数量为400，并且在每次迭代中，将使用通常的DE公式生成另外400个候选解（子项）：</p>
-<script type="math/tex; mode=display">
-\begin{array}{c}
-x_{i}(g+1)=x_{r 1}(g)+F\left(x_{r 2}(g)+x_{r 3}(g)\right) \\
-r 1 \neq r 2 \neq r 3
-\end{array}</script><p>其中xi是候选解集元素；r1 r2; r3是随机数，F是设置为0.5的比例参数，g是当前一代的索引。</p>
-<p>每个候选解决方案将根据索引与其相应的父代竞争，获胜者将生存下来进行下一次迭代。</p>
-<p>最大迭代次数设置为100，并且在对Kaggle CIFAR-10</p>
-<ul>
-<li>进行有针对性的攻击时，如果目标类别的概率标签超过50％</li>
-<li>或者真实类别的标签概率低于5%，则将触发提前停止条件对ImageNet的非针对性攻击。</li>
-</ul>
-<p>然后将真实类别的标签与最高的非真实类别进行比较，以评估攻击是否成功。</p>
-<p>通过使用CIFAR-10图像的均匀分布U（1; 32）和ImageNet图像的均匀分布U（1; 227）初始化初始种群，以生成XY坐标和RGB的正态分布 $\mathrm{N}(\mu=128, \sigma=127)$ 数值。</p>
-<p>对于CIFAR-10，适应度函数只是目标类别的概率标签，对于ImageNet，适应度函数只是真实类别的概率标签。交叉不包括在我们的方案中。</p>
-<h2 id="衡量指标"><a href="#衡量指标" class="headerlink" title="衡量指标"></a>衡量指标</h2><ul>
-<li><p><strong>成功率</strong></p>
-<ul>
-<li>在非目标攻击的情况下，它是指被目标系统成功分类为任意目标类别的对抗图像的百分比。 </li>
-<li>在针对性攻击的情况下，它定义为将自然图像干扰到特定目标类别的概率。</li>
-</ul>
-</li>
-<li><p><strong>对抗性概率标签（置信度）</strong></p>
-<p>累积每次成功扰动后目标类别的概率标签的值，然后除以成功扰动的总数。 该度量表示错误分类对抗性图像时目标系统给出的平均置信度。</p>
-</li>
-<li><p><strong>目标类别数</strong></p>
-<p>计算成功扰动到特定数目（即从0到9）的目标类别的自然图像的数目。 特别是，通过计算不能被其他类别干扰的图像数量，可以评估非目标攻击的有效性。</p>
-</li>
-<li><p><strong>原始目标类对的数量</strong></p>
-<p>计算每个原始目标类对成功攻击的次数。</p>
-</li>
-</ul>
-<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><p>Kaggle CIFAR-10</p>
-<p>ImageNet</p>
+</ol>
+<p>ps.也许安装其他安卓模拟器也可以，但是我是过夜神模拟器，下载证书的时候提示需要sd卡，可能是存储空间不够了吧，我找了半天也没找到调整的地方，就放弃了。</p>
+<h3 id="第三步：为安卓模拟器安装证书"><a href="#第三步：为安卓模拟器安装证书" class="headerlink" title="第三步：为安卓模拟器安装证书"></a>第三步：为安卓模拟器安装证书</h3><ol>
+<li>我们打开安卓模拟器的浏览器，在地址栏输入我们之前得到的fildder的ip地址（以下是我的）</li>
+</ol>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">10<span class="selector-class">.1</span><span class="selector-class">.13</span><span class="selector-class">.83</span><span class="selector-pseudo">:8887</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>点击下载下面的链接FiddlerRoot certificate</li>
+</ol>
+<p><img src="/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/5.png" alt="screenshot_20200910_140032"></p>
+<ol>
+<li>点击下载完成的证书，证书名称随意，后面要设置pin或者手势之类的也都随意。<img src="/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/6.png" alt="screenshot_20200910_140215"></li>
+</ol>
+<h3 id="抓取豆瓣APP的网络请求"><a href="#抓取豆瓣APP的网络请求" class="headerlink" title="抓取豆瓣APP的网络请求"></a>抓取豆瓣APP的网络请求</h3><ol>
+<li>Fiddler左上角开启decode<img src="/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/7.png" alt="image-20200910140654128"></li>
+<li>在模拟器中安装豆瓣app（这一步应该在之前就做好了）</li>
+<li>打开豆瓣app就可以抓包了。</li>
+</ol>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p><a href="https://www.cnblogs.com/smallbo/p/12288846.html" target="_blank" rel="noopener">fiddler for Mac</a></p>
+<p><a href="https://www.52pojie.cn/thread-1262453-1-1.html" target="_blank" rel="noopener">豆瓣app 网络请求签名算法分析与解密</a></p>
+<p><a href="https://bbs.125.la/thread-14226779-1-1.html" target="_blank" rel="noopener">豆瓣APP 登陆sign算法分析</a></p>
+<h3 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h3><p>我只是想搞个豆瓣回帖机器人罢了，怎么这么麻烦啊🆘</p>
 
     </div>
 
@@ -407,7 +401,9 @@ r 1 \neq r 2 \neq r 3
           
           <div class="post-tags">
             
-              <a href="/tags/攻击对抗/" rel="tag"># 攻击对抗</a>
+              <a href="/tags/计算机网络/" rel="tag"># 计算机网络</a>
+            
+              <a href="/tags/HTTP/" rel="tag"># HTTP</a>
             
           </div>
         
@@ -417,8 +413,8 @@ r 1 \neq r 2 \neq r 3
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2020/02/21/对脉冲神经网络的攻击对抗论文的概括总结/" rel="next" title="对脉冲神经网络的攻击对抗论文的概括总结">
-                  <i class="fa fa-chevron-left"></i> 对脉冲神经网络的攻击对抗论文的概括总结
+                <a href="/2020/07/27/Event-based-Vision-A-Survey/" rel="next" title="基于事件的视觉研究综述(SNN部分阅读笔记)">
+                  <i class="fa fa-chevron-left"></i> 基于事件的视觉研究综述(SNN部分阅读笔记)
                 </a>
               
             </div>
@@ -426,10 +422,6 @@ r 1 \neq r 2 \neq r 3
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-              
-                <a href="/2020/07/20/xinxilun/" rel="prev" title="信息熵、交叉熵、KL-散度、联合熵、条件熵和互信息">
-                  信息熵、交叉熵、KL-散度、联合熵、条件熵和互信息 <i class="fa fa-chevron-right"></i>
-                </a>
               
             </div>
           </div>
@@ -603,7 +595,7 @@ r 1 \neq r 2 \neq r 3
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#差分演化"><span class="nav-number">1.</span> <span class="nav-text">差分演化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#优点"><span class="nav-number">1.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法和设置"><span class="nav-number">1.2.</span> <span class="nav-text">方法和设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#衡量指标"><span class="nav-number">1.3.</span> <span class="nav-text">衡量指标</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实验"><span class="nav-number">2.</span> <span class="nav-text">实验</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一步：安装和设置fiddler"><span class="nav-number">1.</span> <span class="nav-text">第一步：安装和设置fiddler</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二步：安装配置安卓模拟器"><span class="nav-number">2.</span> <span class="nav-text">第二步：安装配置安卓模拟器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三步：为安卓模拟器安装证书"><span class="nav-number">3.</span> <span class="nav-text">第三步：为安卓模拟器安装证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#抓取豆瓣APP的网络请求"><span class="nav-number">4.</span> <span class="nav-text">抓取豆瓣APP的网络请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#感想"><span class="nav-number">6.</span> <span class="nav-text">感想</span></a></li></ol></div>
             
 
           </div>
