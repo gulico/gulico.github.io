@@ -55,27 +55,23 @@
   };
 </script>
 
-  <meta name="description" content="网上好多博客都是momo+fiddler的，而且抄来抄去，很少有真的能用的。这里记一次fiddler for mac的使用体验。第一步：安装和设置fiddler下载地址 点击右上角的设置图标 选择connections选项卡 勾选allow remote computer to connect 调整fiddler listens on port（随便设置，不超过65535，不与其他程序占用的端口冲">
-<meta name="keywords" content="计算机网络,HTTP">
+  <meta name="description" content="主要是搜到的中文版解释都不是很能看得懂，所以搬运翻译一份Paul Krzyzanowski大佬写得简介。（有我自己理解增加的部分，在意的朋友可以看原文）Assigning Lamport &amp;amp; Vector TimestampsLamport Clocks每个进程都维护一个Lamport时间戳计数器。">
+<meta name="keywords" content="分布式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Fiddler for mac+安卓模拟器抓包豆瓣APP">
-<meta property="og:url" content="https://gulico.github.io/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/index.html">
+<meta property="og:title" content="Lamport和Vector时间戳">
+<meta property="og:url" content="https://gulico.github.io/2020/09/11/分配Lamport和Vector时间戳/index.html">
 <meta property="og:site_name" content="Gulico">
-<meta property="og:description" content="网上好多博客都是momo+fiddler的，而且抄来抄去，很少有真的能用的。这里记一次fiddler for mac的使用体验。第一步：安装和设置fiddler下载地址 点击右上角的设置图标 选择connections选项卡 勾选allow remote computer to connect 调整fiddler listens on port（随便设置，不超过65535，不与其他程序占用的端口冲">
+<meta property="og:description" content="主要是搜到的中文版解释都不是很能看得懂，所以搬运翻译一份Paul Krzyzanowski大佬写得简介。（有我自己理解增加的部分，在意的朋友可以看原文）Assigning Lamport &amp;amp; Vector TimestampsLamport Clocks每个进程都维护一个Lamport时间戳计数器。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://gulico.github.io/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/1.jpg">
-<meta property="og:image" content="https://gulico.github.io/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/2.png">
-<meta property="og:image" content="https://gulico.github.io/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/3.png">
-<meta property="og:image" content="https://gulico.github.io/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/4.png">
-<meta property="og:image" content="https://gulico.github.io/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/5.png">
-<meta property="og:image" content="https://gulico.github.io/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/6.png">
-<meta property="og:image" content="https://gulico.github.io/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/7.png">
-<meta property="og:updated_time" content="2020-09-10T08:05:35.626Z">
+<meta property="og:image" content="https://gulico.github.io/2020/09/11/分配Lamport和Vector时间戳/clocks.png">
+<meta property="og:image" content="https://gulico.github.io/2020/09/11/分配Lamport和Vector时间戳/clocks-lamport.png">
+<meta property="og:image" content="https://gulico.github.io/2020/09/11/分配Lamport和Vector时间戳/clocks-vector.png">
+<meta property="og:updated_time" content="2020-09-11T13:13:54.978Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Fiddler for mac+安卓模拟器抓包豆瓣APP">
-<meta name="twitter:description" content="网上好多博客都是momo+fiddler的，而且抄来抄去，很少有真的能用的。这里记一次fiddler for mac的使用体验。第一步：安装和设置fiddler下载地址 点击右上角的设置图标 选择connections选项卡 勾选allow remote computer to connect 调整fiddler listens on port（随便设置，不超过65535，不与其他程序占用的端口冲">
-<meta name="twitter:image" content="https://gulico.github.io/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/1.jpg">
-  <link rel="canonical" href="https://gulico.github.io/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/">
+<meta name="twitter:title" content="Lamport和Vector时间戳">
+<meta name="twitter:description" content="主要是搜到的中文版解释都不是很能看得懂，所以搬运翻译一份Paul Krzyzanowski大佬写得简介。（有我自己理解增加的部分，在意的朋友可以看原文）Assigning Lamport &amp;amp; Vector TimestampsLamport Clocks每个进程都维护一个Lamport时间戳计数器。">
+<meta name="twitter:image" content="https://gulico.github.io/2020/09/11/分配Lamport和Vector时间戳/clocks.png">
+  <link rel="canonical" href="https://gulico.github.io/2020/09/11/分配Lamport和Vector时间戳/">
 
 
 <script id="page-configurations">
@@ -89,7 +85,7 @@
   };
 </script>
 
-  <title>Fiddler for mac+安卓模拟器抓包豆瓣APP | Gulico</title>
+  <title>Lamport和Vector时间戳 | Gulico</title>
   
 
 
@@ -264,7 +260,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://gulico.github.io/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/">
+    <link itemprop="mainEntityOfPage" href="https://gulico.github.io/2020/09/11/分配Lamport和Vector时间戳/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Gulico">
@@ -278,7 +274,7 @@
       <header class="post-header">
 
         
-          <h1 class="post-title" itemprop="name headline">Fiddler for mac+安卓模拟器抓包豆瓣APP
+          <h1 class="post-title" itemprop="name headline">Lamport和Vector时间戳
 
             
           </h1>
@@ -295,7 +291,7 @@
                 
               
 
-              <time title="创建时间：2020-09-10 15:59:27 / 修改时间：16:05:35" itemprop="dateCreated datePublished" datetime="2020-09-10T15:59:27+08:00">2020-09-10</time>
+              <time title="创建时间：2020-09-11 19:18:57 / 修改时间：21:13:54" itemprop="dateCreated datePublished" datetime="2020-09-11T19:18:57+08:00">2020-09-11</time>
             </span>
           
             
@@ -308,7 +304,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/计算机网络/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/分布式/" itemprop="url" rel="index"><span itemprop="name">分布式</span></a></span>
 
                 
                 
@@ -317,7 +313,7 @@
           
 
           
-            <span id="/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/" class="post-meta-item leancloud_visitors" data-flag-title="Fiddler for mac+安卓模拟器抓包豆瓣APP" title="阅读次数">
+            <span id="/2020/09/11/分配Lamport和Vector时间戳/" class="post-meta-item leancloud_visitors" data-flag-title="Lamport和Vector时间戳" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -336,8 +332,8 @@
       
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/09/11/分配Lamport和Vector时间戳/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/11/分配Lamport和Vector时间戳/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -353,47 +349,81 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>网上好多博客都是momo+fiddler的，而且抄来抄去，很少有真的能用的。</p><p>这里记一次fiddler for mac的使用体验。</p><h3 id="第一步：安装和设置fiddler"><a href="#第一步：安装和设置fiddler" class="headerlink" title="第一步：安装和设置fiddler"></a>第一步：安装和设置fiddler</h3><p><a href="https://www.telerik.com/download/fiddler-everywhere" target="_blank" rel="noopener">下载地址</a></p><ol>
-<li>点击右上角的设置图标</li>
-<li>选择connections选项卡</li>
-<li>勾选allow remote computer to connect</li>
-<li>调整fiddler listens on port（随便设置，不超过65535，不与其他程序占用的端口冲突即可）</li>
-</ol><a id="more"></a>
+        <p>主要是搜到的中文版解释都不是很能看得懂，所以搬运翻译一份<em>Paul Krzyzanowski</em>大佬写得简介。</p><p>（有我自己理解增加的部分，在意的朋友可以看原文）</p><p><a href="https://www.cs.rutgers.edu/~pxk/417/notes/clocks/index.html" target="_blank" rel="noopener">Assigning Lamport &amp; Vector Timestamps</a></p><h2 id="Lamport-Clocks"><a href="#Lamport-Clocks" class="headerlink" title="Lamport Clocks"></a>Lamport Clocks</h2><p>每个进程都维护一个Lamport时间戳计数器。</p><a id="more"></a>
 
 
 
-<p><img src="/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/1.jpg" alt="1"></p>
-<p>查看电脑ip，终端输入<code>ifconfig | grep &quot;inet&quot;</code></p>
-<p><img src="/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/2.png" alt="image-20200910134607621"></p>
-<h3 id="第二步：安装配置安卓模拟器"><a href="#第二步：安装配置安卓模拟器" class="headerlink" title="第二步：安装配置安卓模拟器"></a>第二步：安装配置安卓模拟器</h3><p>我这里选择的是<a href="https://www.baidu.com/link?url=K0AudkJQOs8O4uSjQHT3sypCuYB_4hliwPz2xj8XcXi&amp;ck=5976.10.9999.389.396.263.137.1300&amp;shh=www.baidu.com&amp;sht=baiduhome_pg&amp;wd=&amp;eqid=ac99bd300000a8e2000000055f59b794" target="_blank" rel="noopener">网易mumu安卓模拟器</a>。</p>
-<ol>
-<li><p>打开模拟器，系统应用-设置-WLAN。鼠标<strong>长按</strong>yiAXCBD就会出现下图中的选项。</p>
-<p><img src="/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/3.png" alt="screenshot_20200910_135507"></p>
+<p>进程中的每个事件都用此计数器来标记。</p>
+<p>在分配给事件时间戳时，时间戳计数器每次+1。</p>
+<p>如果一个进程有四个事件<em>a，b，c，d</em>，则这些事件的Lamport时间戳分别为<em>1、2、3、4</em>。</p>
+<h3 id="例子🌰"><a href="#例子🌰" class="headerlink" title="例子🌰"></a>例子🌰</h3><p>下图显示了三个进程中的一系列事件。</p>
+<p>些事件中的一些代表消息的发送，其他事件代表消息的接收，而其他事件只是本地事件（例如，将一些数据写入文件）。</p>
+<p>根据简单的递增规则，我们得到了如下的时钟值。</p>
+<p><img src="/2020/09/11/分配Lamport和Vector时间戳/clocks.png" alt="clocks"></p>
+<p>这个简单的递增计数器无法提供正确的事件因果关系。如果事件<em>a</em>在事件<em>b</em>之前发生，那么我们期望 <em>clock（a）</em> &lt; <em>clock（b）</em>。</p>
+<p>（而上图中进程之间的时间顺序显然是错乱的，比如b事件和i事件）</p>
+<p>因此，Lamport时间戳生成需要额外的步骤。</p>
+<h3 id="要点"><a href="#要点" class="headerlink" title="要点"></a>要点</h3><ul>
+<li><p>如果事件是<strong>发送消息</strong>，则该事件的时间戳与消息一起发送。</p>
 </li>
-<li><p>选择修改网络，代理选择手动，填入主机ip和刚才设置的端口号<img src="/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/4.png" alt="screenshot_20200910_135712"></p>
+<li><p>如果事件是<strong>接收消息</strong>，则进程的时间戳记计数器的<strong>当前值（在此事件之前刚刚增加）与接收到的消息中的时间戳记进行比较</strong>。</p>
+</li>
+<li>如果接收到的消息的时间戳大于或等于当前事件的时间戳，则事件和进程的时间戳计数器都将用<strong>接收到的消息中的时间戳值加1</strong>进行更新。这确保了接收到的事件的时间戳以及该进程上的所有其他时间戳将大于发送消息以及该进程上的所有先前消息的事件的时间戳。</li>
+</ul>
+<h4 id="情况一：接收到的消息的时间戳大于或等于当前事件的时间戳"><a href="#情况一：接收到的消息的时间戳大于或等于当前事件的时间戳" class="headerlink" title="情况一：接收到的消息的时间戳大于或等于当前事件的时间戳"></a>情况一：接收到的消息的时间戳大于或等于当前事件的时间戳</h4><p>在下图中，事件$P_1$中的事件<em>i</em>，是事件<em>b</em>在$P_0$中发送的消息的接收事件。</p>
+<p>如果事件<em>i</em>只是正常的本地事件，则$P_1$将为其分配时间戳2。但是，由于接收到的时间戳为2（大于或等于2），因此时间戳计数器设置为2 + 1，则事件<em>i</em>的时间戳为3 。</p>
+<p>这保证里关系<em>b</em> → <em>i</em>，即b发生在i之前。</p>
+<h4 id="情况二：接收到的消息的时间戳小于当前事件的时间戳"><a href="#情况二：接收到的消息的时间戳小于当前事件的时间戳" class="headerlink" title="情况二：接收到的消息的时间戳小于当前事件的时间戳"></a>情况二：接收到的消息的时间戳小于当前事件的时间戳</h4><p>进程$P_0$中的事件<em>c</em>是，事件<em>h</em>发送的消息的接收事件。</p>
+<p>在这里，<em>c</em>的时间戳不需要调整。消息中的时间戳为1，小于$P_0$准备分配给<em>c</em>的事件时间戳3 。</p>
+<p><img src="/2020/09/11/分配Lamport和Vector时间戳/clocks-lamport.png" alt="Lamport Clock Assignments"></p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>使用Lamport时间戳，我们可以确保两个因果相关的事件将具有反映事件顺序的时间戳。例如，在Lamport因果意义上，事件<em>h</em>在事件<em>m</em>之前发生。因果事件的链为 <em>h</em> → <em>c</em>， <em>c</em> → <em>d</em>和 <em>d</em> → <em>m</em>。由于<em>之前发生的</em>关系是可传递的，因此我们知道 <em>h</em> → <em>m</em>（<em>h</em>在<em>m</em>之前发生）。Lamport时间戳反映了这一点。用于时间戳h（1）小于所述时间戳m（7）。</p>
+<p>但是，仅通过查看时间戳，我们不能得出存在因果关系的结论。例如，因为<em>k</em>（1）的时间戳小于<em>i</em>（3）的时间戳，并不意味着<em>k</em>在<em>i</em>之前发生 。这些事件恰巧是<strong>并发的</strong>，但我们无法通过查看Lamport时间戳来辨别。我们需要采用其他技术才能做出确定。该技术即是<strong>Vector Clocks</strong>。</p>
+<h2 id="Vector-Clocks"><a href="#Vector-Clocks" class="headerlink" title="Vector Clocks"></a>Vector Clocks</h2><p>对于Vector Clocks，假设我们知道该组中的进程数（我们稍后将删除此限制）。</p>
+<p>现在，我们的时间戳不再是单个数字，而是一个数字向量，每个元素都对应一个进程。每个进程都知道其在向量中的位置。</p>
+<p>例如，在下面的示例中，向量元素对应于进程$processes (P_0, P_1, P_2)$。</p>
+<p>与Lamport的算法一样，在将时间戳附加到事件之前，<strong>向量时间戳中与进程编号相对应的元素会增加</strong>。如果进程$P_0$具有四个顺序事件<em>a，b，c，d</em>，则它们将获得<em>(1,0,0), (2, 0, 0), (3, 0, 0), (4, 0, 0)</em>。如果进程$P_2$具有四个顺序事件<em>a，b，c，d</em>，则它们将获得<em>(0,0,1), (0, 0, 2), (0, 0, 3), (0, 0, 4)</em>。</p>
+<p>如果事件是发送消息，则与该事件关联的整个向量将与消息一起发送。当某个进程接收到该消息时（该事件将被分配一个时间戳），接收进程将执行以下操作：</p>
+<ol>
+<li><p>就像在时间戳标记任何本地事件一样，增加计数器在向量中的位置。</p>
+</li>
+<li><p>对接收到的向量与进程的时间戳向量进行逐元素比较。<strong>将进程的时间戳向量设置为较高的值</strong>：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (i=<span class="number">0</span>; i &lt; num_elements; i++) <span class="comment">//循环每个元素。例子中num_elements为3</span></span><br><span class="line">	<span class="keyword">if</span> (received[i] &gt; system[i])<span class="comment">//将较大的元素值赋值给当前进程的元素</span></span><br><span class="line">		system[i] = received[i];</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<p>ps.也许安装其他安卓模拟器也可以，但是我是过夜神模拟器，下载证书的时候提示需要sd卡，可能是存储空间不够了吧，我找了半天也没找到调整的地方，就放弃了。</p>
-<h3 id="第三步：为安卓模拟器安装证书"><a href="#第三步：为安卓模拟器安装证书" class="headerlink" title="第三步：为安卓模拟器安装证书"></a>第三步：为安卓模拟器安装证书</h3><ol>
-<li>我们打开安卓模拟器的浏览器，在地址栏输入我们之前得到的fildder的ip地址（以下是我的）</li>
-</ol>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">10<span class="selector-class">.1</span><span class="selector-class">.13</span><span class="selector-class">.83</span><span class="selector-pseudo">:8887</span></span><br></pre></td></tr></table></figure>
+<h3 id="例子🌰分配Vector-Clocks"><a href="#例子🌰分配Vector-Clocks" class="headerlink" title="例子🌰分配Vector Clocks"></a>例子🌰分配Vector Clocks</h3><p>下图显示了和上面的例子相同事件集，但具有Vector Clocks分配。 </p>
+<p>事件b是向$P_1$发送消息。 该消息包含事件b的时间戳 (2, 2, 0) 。 </p>
+<p>事件i是该消息的接收事件。 如果i是本地事件，它将获得时间戳(0, 2, 0)。 由于它是消息的接收事件，我们对接收到的时间戳和本地时间戳中的值进行逐元素比较，并选择每对数字中的最大值：</p>
+<p>将(2, 0, 0)与收到的时间戳(0, 2, 0)进行比较。</p>
 <ol>
-<li>点击下载下面的链接FiddlerRoot certificate</li>
+<li>第一个元素：2 vs. 0，取较大值2。</li>
+<li>第二个元素：0 vs. 2，取较大值2。</li>
+<li>第三个元素：0 vs. 0，相等取0。</li>
 </ol>
-<p><img src="/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/5.png" alt="screenshot_20200910_140032"></p>
-<ol>
-<li>点击下载完成的证书，证书名称随意，后面要设置pin或者手势之类的也都随意。<img src="/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/6.png" alt="screenshot_20200910_140215"></li>
-</ol>
-<h3 id="抓取豆瓣APP的网络请求"><a href="#抓取豆瓣APP的网络请求" class="headerlink" title="抓取豆瓣APP的网络请求"></a>抓取豆瓣APP的网络请求</h3><ol>
-<li>Fiddler左上角开启decode<img src="/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/7.png" alt="image-20200910140654128"></li>
-<li>在模拟器中安装豆瓣app（这一步应该在之前就做好了）</li>
-<li>打开豆瓣app就可以抓包了。</li>
-</ol>
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p><a href="https://www.cnblogs.com/smallbo/p/12288846.html" target="_blank" rel="noopener">fiddler for Mac</a></p>
-<p><a href="https://www.52pojie.cn/thread-1262453-1-1.html" target="_blank" rel="noopener">豆瓣app 网络请求签名算法分析与解密</a></p>
-<p><a href="https://bbs.125.la/thread-14226779-1-1.html" target="_blank" rel="noopener">豆瓣APP 登陆sign算法分析</a></p>
-<h3 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h3><p>我只是想搞个豆瓣回帖机器人罢了，怎么这么麻烦啊🆘</p>
+<p>因此，所得的向量为（2，2，0），并分配给事件i和系统时钟。 $P_1$上的下一个本地事件将被标记为（2，2 + 1，0）或（2，3，0）。</p>
+<p><img src="/2020/09/11/分配Lamport和Vector时间戳/clocks-vector.png" alt="Vector Clock Assignments"></p>
+<h3 id="如何确定事件发生的顺序"><a href="#如何确定事件发生的顺序" class="headerlink" title="如何确定事件发生的顺序"></a>如何确定事件发生的顺序</h3><p>要确定两个事件是否同时发生，应对<strong>相应时间戳进行逐元素比较</strong>。 </p>
+<ul>
+<li><p>如果时间戳记V的<strong>每个元素小于或等于</strong>时间戳记W的相应元素，<strong>则V因果顺序在W之前</strong>，并且事件<strong>不是并发的</strong>。 </p>
+</li>
+<li><p>如果时间戳记V的<strong>每个元素都大于或等于</strong>时间戳记W的相应元素，<strong>则W因果顺序在V之前</strong>，并且<strong>事件不是并发的</strong>。 </p>
+</li>
+<li><p>如果这些条件都不适用，并且<strong>V中的某些元素大于W而其他元素小于W中的对应元素</strong>，则事件<strong>是并发的</strong>。 </p>
+<p>我们可以用伪代码对其进行总结：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">isconcurrent(<span class="keyword">int</span> v[], <span class="keyword">int</span> w[])</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">bool</span> greater=<span class="literal">false</span>, less=<span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (i=<span class="number">0</span>; i &lt; num_elements; i++) <span class="comment">//循环每个元素。例子中num_elements为3</span></span><br><span class="line">		<span class="keyword">if</span> (v[i] &gt; w[i])</span><br><span class="line">			greater = <span class="literal">true</span>;</span><br><span class="line">		<span class="keyword">else</span> (v[i] &lt; w[i])</span><br><span class="line">			less = <span class="literal">true</span>;</span><br><span class="line">	<span class="keyword">if</span> (greater &amp;&amp; less)<span class="comment">//有些元素大有些元素小</span></span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;	<span class="comment">/* 向量是并发的 */</span></span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;	<span class="comment">/* 向量不是并发的 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="例子🌰确定事件发生顺序"><a href="#例子🌰确定事件发生顺序" class="headerlink" title="例子🌰确定事件发生顺序"></a>例子🌰确定事件发生顺序</h3><ul>
+<li><p><strong>非并发事件</strong>：在上图中，e的时间戳小于j的时间戳，因为e中的每个元素都小于或等于j中的相应元素。 即5≤6、1≤3和2≤2。事件是因果相关的，并且e→j</p>
+</li>
+<li><p><strong>并发事件</strong>：事件f和m是并发的。 当我们比较f和m的第一个元素时，我们看到f&gt; m（6&gt; 4）。 当比较第二个元素时，我们看到f = m（1 = 1）。 最后，当我们比较第三个元素时，我们看到f &lt;m（2 &lt;3）。 因此，我们不能说f的向量小于或大于m的向量。</p>
+</li>
+</ul>
+<h3 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h3><p>回想一下，我们必须假设我们知道组中的进程数，以便我们可以创建适当大小的向量。 在实际的实现中，情况并非总是如此。 而且，通信中可能不会涉及所有进程，从而导致不必要的大向量。</p>
+<p>我们可以用一组<strong>元组</strong>替换向量，每个元组代表一个<strong>进程ID及其计数器</strong>：<code>( { P0, 6 }, { P1, 3 }, { P2, 2 } )</code></p>
+<p>当一个进程发送一个向量时，<strong>它发送它拥有的整个元组集</strong>。 当它收到一个向量并执行比较时，它会比较每个相关对。 例如，将$P_0$的值与接收到的向量中包含$P_0$的元组进行比较。 如果其中一组缺少任何进程ID，则将其隐式指定为0进行比较。 所得向量包含所有元组的超集。</p>
+<h3 id="例子🌰-1"><a href="#例子🌰-1" class="headerlink" title="例子🌰"></a>例子🌰</h3><p>例如，如果某个进程的系统矢量时钟为：<code>( { P0, 6 }, { P1, 3 }, { P2, 2 } )</code></p>
+<p>接收值为 <code>( { P1, 1 }, { P2, 5 },  { P3, 8 } )</code></p>
+<p>产生的向量将是所有进程ID及其最大值的集合：<code>( { P0, 6 }, { P1, 3 }, { P2, 5 }, { P3, 8 } )</code></p>
 
     </div>
 
@@ -409,9 +439,7 @@
           
           <div class="post-tags">
             
-              <a href="/tags/计算机网络/" rel="tag"># 计算机网络</a>
-            
-              <a href="/tags/HTTP/" rel="tag"># HTTP</a>
+              <a href="/tags/分布式/" rel="tag"># 分布式</a>
             
           </div>
         
@@ -421,8 +449,8 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2020/07/27/Event-based-Vision-A-Survey/" rel="next" title="基于事件的视觉研究综述(SNN部分阅读笔记)">
-                  <i class="fa fa-chevron-left"></i> 基于事件的视觉研究综述(SNN部分阅读笔记)
+                <a href="/2020/09/10/Fiddler-for-mac-安卓模拟器抓包豆瓣APP/" rel="next" title="Fiddler for mac+安卓模拟器抓包豆瓣APP">
+                  <i class="fa fa-chevron-left"></i> Fiddler for mac+安卓模拟器抓包豆瓣APP
                 </a>
               
             </div>
@@ -430,10 +458,6 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-              
-                <a href="/2020/09/11/分配Lamport和Vector时间戳/" rel="prev" title="Lamport和Vector时间戳">
-                  Lamport和Vector时间戳 <i class="fa fa-chevron-right"></i>
-                </a>
               
             </div>
           </div>
@@ -611,7 +635,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一步：安装和设置fiddler"><span class="nav-number">1.</span> <span class="nav-text">第一步：安装和设置fiddler</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二步：安装配置安卓模拟器"><span class="nav-number">2.</span> <span class="nav-text">第二步：安装配置安卓模拟器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三步：为安卓模拟器安装证书"><span class="nav-number">3.</span> <span class="nav-text">第三步：为安卓模拟器安装证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#抓取豆瓣APP的网络请求"><span class="nav-number">4.</span> <span class="nav-text">抓取豆瓣APP的网络请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#感想"><span class="nav-number">6.</span> <span class="nav-text">感想</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Lamport-Clocks"><span class="nav-number">1.</span> <span class="nav-text">Lamport Clocks</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#例子🌰"><span class="nav-number">1.1.</span> <span class="nav-text">例子🌰</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#要点"><span class="nav-number">1.2.</span> <span class="nav-text">要点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#情况一：接收到的消息的时间戳大于或等于当前事件的时间戳"><span class="nav-number">1.2.1.</span> <span class="nav-text">情况一：接收到的消息的时间戳大于或等于当前事件的时间戳</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#情况二：接收到的消息的时间戳小于当前事件的时间戳"><span class="nav-number">1.2.2.</span> <span class="nav-text">情况二：接收到的消息的时间戳小于当前事件的时间戳</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">1.3.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vector-Clocks"><span class="nav-number">2.</span> <span class="nav-text">Vector Clocks</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#例子🌰分配Vector-Clocks"><span class="nav-number">2.1.</span> <span class="nav-text">例子🌰分配Vector Clocks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何确定事件发生的顺序"><span class="nav-number">2.2.</span> <span class="nav-text">如何确定事件发生的顺序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#例子🌰确定事件发生顺序"><span class="nav-number">2.3.</span> <span class="nav-text">例子🌰确定事件发生顺序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#改进"><span class="nav-number">2.4.</span> <span class="nav-text">改进</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#例子🌰-1"><span class="nav-number">2.5.</span> <span class="nav-text">例子🌰</span></a></li></ol></li></ol></div>
             
 
           </div>
